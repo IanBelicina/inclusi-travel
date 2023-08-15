@@ -55,6 +55,22 @@ steps = [
     [
         # "Up" SQL statement
         """
+        CREATE TABLE reviews (
+            id SERIAL NOT NULL UNIQUE,
+            location_id INTEGER NOT NULL REFERENCES locations("id") ON DELETE CASCADE,
+            account_id INTEGER NOT NULL REFERENCES accounts("id") ON DELETE CASCADE, rating INTEGER NOT NULL check(rating = 1 or rating = 2 or rating = 3 or rating = 4 or rating = 5),
+            body TEXT NOT NULL,
+            created_on TIMESTAMP NOT NULL
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE reviews;
+        """
+    ],
+    [
+        # "Up" SQL statement
+        """
         CREATE TABLE comments (
             id SERIAL NOT NULL UNIQUE,
             account_id INTEGER NOT NULL REFERENCES accounts("id") ON DELETE CASCADE,
@@ -67,22 +83,6 @@ steps = [
         # "Down" SQL statement
         """
         DROP TABLE comments;
-        """
-    ],
-    [
-        # "Up" SQL statement
-        """
-        CREATE TABLE reviews (
-            id SERIAL NOT NULL UNIQUE,
-            location_id NOT NULL INTEGER REFERENCES locations("id") ON DELETE CASCADE,
-            account_id NOT NULL INTEGER REFERENCES accounts("id") ON DELETE CASCADE, rating INTEGER NOT NULL check(rating = 1 or rating = 2 or rating = 3 or rating = 4 or rating = 5),
-            body TEXT NOT NULL,
-            created_on TIMESTAMP NOT NULL
-        );
-        """,
-        # "Down" SQL statement
-        """
-        DROP TABLE reviews;
         """
     ],
     [
