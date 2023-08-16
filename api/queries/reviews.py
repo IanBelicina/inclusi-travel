@@ -46,7 +46,7 @@ class ReviewQueries:
                         for i, column in enumerate(cur.description):
                             record[column.name] = row[i]
                         
-                        # Construct a LocationOut instance
+                       
                         location = LocationsOut(
                             id=record['location_id'],
                             address=record['address'],
@@ -57,7 +57,7 @@ class ReviewQueries:
                             picture=record['picture'] or '', # if its empty
                         )
 
-                        # Add the location instance to the ReviewOut object
+                        
                         record['location_id'] = location
 
                         results.append(ReviewOut(**record))
