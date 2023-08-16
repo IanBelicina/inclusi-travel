@@ -1,6 +1,17 @@
 from pydantic import BaseModel
+from queries.pool import pool
+from typing import List
+# from queries.locations import LocationsOut
+# from queries.accounts import AccountOut
+from datetime import date
 
-from queries.locations import LocationsOut
+class ReviewOut(BaseModel):
+    id: int
+    location_id: int
+    account_id: int
+    rating: int
+    body: str
+    created_on: date
 
 
 class ReviewIn(BaseModel):
@@ -9,20 +20,33 @@ class ReviewIn(BaseModel):
     account_id: int
     rating: int
     body: str
-    created_on: str
+    created_on: date
+
+class ReviewListOut(BaseModel):
+    reviews: list[ReviewOut]
 
 
+class ReviewQueries:
+    def get_all_reviews(self) -> List[ReviewOut]:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT id, location_id, account_id, rating,
+                        body, created_on
+                    FROM reviews
+                    ORDER BY created_on
+                """
+                )
 
-class ReviewOut(BaseModel):
-    id: int
-    location_id: LocationsOut
-    account_id: int
-    rating: int
-    body: str
-    created_on: str
+                results = []
+                for row in cur.fetchall():
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                    results.append(ReviewOut(**record))
 
-
-
+                return results
 
 
 #  """
@@ -35,5 +59,3 @@ class ReviewOut(BaseModel):
 #             created_on TIMESTAMP NOT NULL
 #         );
 #         """,
-
-
