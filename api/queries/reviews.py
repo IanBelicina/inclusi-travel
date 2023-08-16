@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 from queries.locations import LocationsOut
+from queries.accounts import AccountOut
 from datetime import date
 
 class ReviewIn(BaseModel):
@@ -17,7 +18,7 @@ class ReviewOut(BaseModel):
     id: int
     # location_id: LocationsOut
     location_id:int
-    account_id: int
+    account_id: AccountOut
     rating: int
     body: str
     created_on: date
