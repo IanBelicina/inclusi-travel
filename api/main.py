@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import comments
+from routers import comments, reviews
 import os
 
 app = FastAPI()
 app.include_router(comments.router)
+app.include_router(reviews.router)
 
 app.add_middleware(
     CORSMiddleware,
