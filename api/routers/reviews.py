@@ -7,4 +7,5 @@ router = APIRouter()
 
 @router.post("/reviews")
 def create_review(review: ReviewIn):
+    print("review", review.body)
     return review
