@@ -1,16 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile
+from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from psycopg.errors import ForeignKeyViolation
-from queries.locations import LocationsOut, LocationQueries, LocationsIn
+from queries.locations import LocationsOut, LocationQueries, LocationsIn, LocationListOut
 
 router = APIRouter()
 
 
-@router.get("/api/locations/", response_model = LocationsOut)
-def get_location(
+@router.get("/api/locations/", response_model =LocationListOut)
+def get_locations(
     queries: LocationQueries = Depends()
 ):
-    return {"locations": queries.get_locations()}
+    return {"locations": queries.get_all_locations()}
 
 @router.post("/api/locations/", response_model = LocationsOut)
 def create_location(

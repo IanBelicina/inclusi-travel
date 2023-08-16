@@ -16,6 +16,7 @@ class LocationsIn(BaseModel):
     picture: str
     updated_on: date
 
+
 class LocationsOut(BaseModel):
     id: int
     address: str
@@ -25,15 +26,17 @@ class LocationsOut(BaseModel):
     picture: str
     updated_on: date
 
+class LocationListOut(BaseModel):
+    locations: list[LocationsOut]
 
 class LocationQueries:
     def get_all_locations(self)->List[LocationsOut]:
         with pool.connection() as conn:
-            with conn.cursur() as cur:
+            with conn.cursor() as cur:
                 cur.execute(
                     """
                     SELECT id, address, city, state,
-                        location_name, picture
+                        location_name, picture, updated_on
                     FROM locations
 
                 """
