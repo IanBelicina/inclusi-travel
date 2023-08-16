@@ -7,7 +7,7 @@ from datetime import date
 
 class ReviewOut(BaseModel):
     id: int
-    location_id: int
+    location_id: LocationsOut
     account_id: int
     rating: int
     body: str
@@ -28,39 +28,77 @@ class ReviewListOut(BaseModel):
 
 class ReviewQueries:
     def get_all_reviews(self) -> List[ReviewOut]:
-        with pool.connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    SELECT id, location_id, account_id, rating,
-                        body, created_on
-                    FROM reviews
-                    ORDER BY created_on
-                """
-                )
+            with pool.connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        """
+                        SELECT r.id, r.location_id, r.account_id, r.rating,
+                        r.body, r.created_on, l.location_name, l.address, l.city, l.state, l.updated_on, l.picture
+                        FROM reviews r
+                        JOIN locations l ON r.location_id = l.id
+                        ORDER BY r.created_on;
+                        """
+                    )
 
-                results = []
-                for row in cur.fetchall():
-                    record = {}
-                    for i, column in enumerate(cur.description):
-                        record[column.name] = row[i]
-                    results.append(ReviewOut(**record))
+                    results = []
+                    for row in cur.fetchall():
+                        record = {}
+                        for i, column in enumerate(cur.description):
+                            record[column.name] = row[i]
+                        
+                        # Construct a LocationOut instance
+                        location = LocationsOut(
+                            id=record['location_id'],
+                            address=record['address'],
+                            city=record['city'],
+                            state=record['state'],
+                            location_name=record['location_name'],
+                            updated_on=record['updated_on'],
+                            picture=record['picture'] or '', # if its empty
+                        )
 
-                return results
+                        # Add the location instance to the ReviewOut object
+                        record['location_id'] = location
 
-    def create_review(self, review: ReviewIn) -> ReviewOut:
-        with pool.getconn() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    """
-                    INSERT INTO reviews (location_id, account_id, rating, body, created_on)
-                    VALUES (%s, %s, %s, %s, %s)
-                    RETURNING id, location_id, account_id, rating, body, created_on
-                    """,
-                     (review.location_id, review.account_id, review.rating, review.body, review.created_on),
-                )
+                        results.append(ReviewOut(**record))
+
+                    return results
                 
-                row = cur.fetchone()
+                
+    # def get_all_reviews(self) -> List[ReviewOut]:
+    #     with pool.connection() as conn:
+    #         with conn.cursor() as cur:
+    #             cur.execute(
+    #                 """
+    #                 SELECT id, location_id, account_id, rating,
+    #                     body, created_on
+    #                 FROM reviews
+    #                 ORDER BY created_on
+    #             """
+    #             )
+
+    #             results = []
+    #             for row in cur.fetchall():
+    #                 record = {}
+    #                 for i, column in enumerate(cur.description):
+    #                     record[column.name] = row[i]
+    #                 results.append(ReviewOut(**record))
+
+    #             return results
+
+    # def create_review(self, review: ReviewIn) -> ReviewOut:
+    #     with pool.getconn() as conn:
+    #         with conn.cursor() as cur:
+    #             cur.execute(
+    #                 """
+    #                 INSERT INTO reviews (location_id, account_id, rating, body, created_on)
+    #                 VALUES (%s, %s, %s, %s, %s)
+    #                 RETURNING id, location_id, account_id, rating, body, created_on
+    #                 """,
+    #                  (review.location_id, review.account_id, review.rating, review.body, review.created_on),
+    #             )
+                
+    #             row = cur.fetchone()
 
 
 #  """
