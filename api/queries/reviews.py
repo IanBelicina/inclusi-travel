@@ -16,8 +16,7 @@ class ReviewIn(BaseModel):
 
 class ReviewOut(BaseModel):
     id: int
-    # location_id: LocationsOut
-    location_id:int
+    location_id: LocationsOut
     account_id: AccountOut
     rating: int
     body: str

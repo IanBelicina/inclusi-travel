@@ -32,7 +32,7 @@ class CommentRepository:
                 with conn.cursor() as db:
                     db.execute(
                         """
-                        SELECT
+                        select
                             c.id as comment_id
                             ,c.account_id as account_id_comment
                             ,c.content as content
@@ -40,6 +40,7 @@ class CommentRepository:
 
                             ,r.id as review_id
                             ,r.location_id as location_id
+
                             ,r.rating as rating
                             ,r.body as body
                             ,r.created_on as created_on_review
@@ -51,9 +52,18 @@ class CommentRepository:
                             ,a.email as email
                             ,a.username as username
                             ,a.password as password
+
+                            ,l.id as location_id_location
+                            ,l.address as address
+                            ,l.city as city
+                            ,l.state as state
+                            ,l.location_name as location_name
+                            ,l.picture as picture
+                            ,l.updated_on as updated_on
                         from comments c
                         join reviews r on c.review_id = r.id
                         join accounts a on r.account_id = a.id
+                        join locations l on r.location_id = l.id
                         where review_id =  %s
                         """,
                         [review_id]
@@ -118,10 +128,24 @@ class CommentRepository:
                     account[column.name] = row[i]
             account["id"] = account["account_id"]
 
+            location = {}
+            location_fields = [
+                "location_id_location",
+                "address",
+                "city",
+                "state",
+                "location_name",
+                "picture",
+                "updated_on"
+            ]
+            for i, column in enumerate(description):
+                if column.name in location_fields:
+                    location[column.name] = row[i]
+            location["id"] = location["location_id_location"]
+            location["picture"] = location["picture"] or ''
+
+            review["location_id"] = location
             review["account_id"] = account
-
             comment["review"] = review
-
-
 
             return CommentOut(**comment)
