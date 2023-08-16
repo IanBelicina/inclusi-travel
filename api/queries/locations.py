@@ -15,6 +15,7 @@ class LocationsIn(BaseModel):
     location_name: str
     picture: str
     updated_on: date
+
 class LocationsOut(BaseModel):
     id: int
     address: str
@@ -71,4 +72,63 @@ class LocationQueries:
                     record = {}
                     for i, column in enumerate(cur.description):
                         record[column.name]= row[i]
+                return LocationsOut(**record)
+    def delete_location(self,location_id) ->None:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM locations
+                    WHERE id = %s
+                    """,
+                    [location_id],
+
+                )
+    def get_a_location(self, location_id) -> LocationsOut:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                """
+                    SELECT id, address, city, state, location_name, picture, updated_on
+                    FROM locations
+                    WHERE id = %s
+                """,
+                    [location_id],
+                )
+                record = None
+                row = cur.fetchone()
+                if row is not None:
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+
+                return LocationsOut(**record)
+    def update_a_location(self, id, data) -> LocationsOut:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                data.updated_on = date.today()
+                params =[
+                    data.address,
+                    data.city,
+                    data.state,
+                    data.location_name,
+                    data.picture,
+                    data.updated_on,
+                    id
+                ]
+                cur.execute(
+                    """
+                    UPDATE Locations
+                    SET address = %s, city=%s, state =%s, location_name=%s, picture=%s, updated_on=%s
+                    WHERE id = %s
+                    RETURNING *
+                """,
+                    params,
+                )
+                record = None
+                row = cur.fetchone()
+                if row is not None:
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
                 return LocationsOut(**record)

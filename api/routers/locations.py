@@ -21,3 +21,31 @@ def create_location(
         return queries.create_location(location)
     except ForeignKeyViolation as e:
         raise HTTPException(status_code=400)
+
+@router.delete("/api/locations/{location_id}/", response_model =bool)
+def delete_location(
+    location_id: int,
+    queries: LocationQueries = Depends()
+):
+    queries.delete_location(location_id)
+    return True
+
+@router.get("/api/locations/{location_id}", response_model = LocationsOut)
+def get_location(
+    location_id:int,
+    queries: LocationQueries = Depends()
+):
+    record = queries.get_a_location(location_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="No location found with id {}".format(location_id))
+    else:
+        return record
+
+@router.put("/api/locations/{location_id}", response_model = LocationsOut)
+def update_location(
+    location_id: int,
+    location: LocationsIn,
+    queries: LocationQueries = Depends()
+):
+    record = queries.update_a_location(id = location_id, data = location)
+    return record
