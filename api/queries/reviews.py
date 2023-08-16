@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-# from typing import Optional
+
+from queries.locations import LocationsOut
 
 
 class ReviewIn(BaseModel):
@@ -14,7 +15,7 @@ class ReviewIn(BaseModel):
 
 class ReviewOut(BaseModel):
     id: int
-    location_id: LocationOut
+    location_id: LocationsOut
     account_id: AccountOut
     rating: int
     body: str
