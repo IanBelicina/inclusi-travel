@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from queries.pool import pool
 from typing import List
-# from queries.locations import LocationsOut
-# from queries.accounts import AccountOut
+from queries.locations import LocationsOut
+from queries.accounts import AccountOut
 from datetime import date
 
 class ReviewOut(BaseModel):
@@ -48,14 +48,26 @@ class ReviewQueries:
 
                 return results
 
+    def create_review(self, review: ReviewIn) -> ReviewOut:
+        with pool.getconn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO reviews (location_id, account_id, rating, body, created_on)
+                    VALUES (%s, %s, %s, %s, %s)
+                    RETURNING id, location_id, account_id, rating, body, created_on
+                    """,
+                     (review.location_id, review.account_id, review.rating, review.body, review.created_on),
+                )
+                
+                row = cur.fetchone()
 
-#  """
-#         CREATE TABLE reviews (
-#             id SERIAL NOT NULL UNIQUE,
-#             location_id INTEGER NOT NULL REFERENCES locations("id") ON DELETE CASCADE,
-#             account_id INTEGER NOT NULL REFERENCES accounts("id") ON DELETE CASCADE, 
-#              rating INTEGER NOT NULL check(rating = 1 or rating = 2 or rating = 3 or rating = 4 or rating = 5),
-#             body TEXT NOT NULL,
-#             created_on TIMESTAMP NOT NULL
-#         );
-#         """,
+                
+                column_names = [column.name for column in cur.description]
+                row_dict = dict(zip(column_names, row))
+
+                # Create ReviewOut object using the dictionary values
+                review_out_object = ReviewOut(**row_dict)
+
+                # Return the newly created ReviewOut object
+                return review_out_object
