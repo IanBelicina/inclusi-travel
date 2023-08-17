@@ -49,3 +49,4 @@ def update_location(
 ):
     record = queries.update_a_location(id = location_id, data = location)
     return record
+

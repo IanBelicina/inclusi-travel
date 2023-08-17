@@ -63,3 +63,10 @@ def update_review(
         raise HTTPException(status_code=500, detail="Failed to update review")
 
     return updated_review_out
+
+@router.get("/api/locations/{location_id}/average_rating", response_model=float)
+def get_average_rating(
+    location_id: int,
+    queries: ReviewQueries = Depends()
+):
+    return queries.get_average_rating_for_location(location_id)

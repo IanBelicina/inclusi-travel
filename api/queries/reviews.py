@@ -214,3 +214,17 @@ class ReviewQueries:
                     return review_out_object
                 else:
                     return None            
+    
+    def get_average_rating_for_location(self, location_id: int) -> float:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT AVG(rating)
+                    FROM reviews
+                    WHERE location_id = %s
+                    """,
+                    [location_id],
+                )
+                average_rating = cur.fetchone()[0]
+                return average_rating if average_rating is not None else 0.0
