@@ -24,3 +24,22 @@ def create_review(
 ):
     
     return queries.create_review(review)
+
+@router.delete("/api/reviews/{id}/", response_model =bool)
+def delete_review(
+    id: int,
+    queries: ReviewQueries = Depends()
+):
+    queries.delete_review(id)
+    return True
+
+@router.get("/api/reviews/{id}", response_model= ReviewOut)
+def get_review(
+        id:int,
+        queries: ReviewQueries = Depends()
+):
+    record = queries.get_review(id)
+    if record is None:
+        raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
+    else:
+        return record

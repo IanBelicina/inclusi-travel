@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 from queries.pool import pool
 from typing import List
-from queries.locations import LocationsOut
+from queries.locations import LocationsOut # LocationQueries
 from queries.accounts import AccountOut
+
 from datetime import date
 
 class ReviewIn(BaseModel):
@@ -105,5 +106,62 @@ class ReviewQueries:
 
                     return results
                 
+    def delete_review(self, id) -> None:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM reviews
+                    WHERE id = %s
+                    """,
+                    [id],
+                )
 
+    def get_review(self, id) -> ReviewOut:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT r.id, r.location_id, r.account_id, r.rating,
+                    r.body, r.created_on, l.location_name, l.address, l.city, l.state, l.updated_on, l.picture,
+                    a.first_name, a.last_name, a.date_of_birth, a.email, a.username, a.password
+                    FROM reviews r
+                    JOIN locations l ON r.location_id = l.id
+                    JOIN accounts a ON r.account_id = a.id
+                    WHERE r.id = %s;
+                    """,
+                    (id,),
+                )
 
+                row = cur.fetchone()
+                if row:
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+
+                    location = LocationsOut(
+                        id=record['location_id'],
+                        address=record['address'],
+                        city=record['city'],
+                        state=record['state'],
+                        location_name=record['location_name'],
+                        updated_on=record['updated_on'],
+                        picture=record['picture'] or '',  # if it's empty
+                    )
+
+                    account = AccountOut(
+                        id=record['account_id'],
+                        first_name=record['first_name'],
+                        last_name=record['last_name'],
+                        date_of_birth=record['date_of_birth'],
+                        email=record['email'],
+                        username=record['username'],
+                        password=record['password']
+                    )
+
+                    record['location_id'] = location
+                    record['account_id'] = account
+
+                    return ReviewOut(**record)
+                else:
+                    return None
