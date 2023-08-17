@@ -1,9 +1,21 @@
-from fastapi import APIRouter
-from queries.accessibility import AccessibilityIn, AccessibilityOut
+from fastapi import APIRouter, Depends, HTTPException
+from queries.accessibility import AccessibilityIn, AccessibilityOut, AcessibilityQueries, AccessibilityListOut
+from psycopg.errors import ForeignKeyViolation
 
 router = APIRouter()
 
-@router.post("/accessibility")
-def create_acessibility(accessibility:AccessibilityIn):
-    print("accessibility", accessibility.name)
-    return accessibility
+@router.post("/api/accessibility", response_model=AccessibilityOut)
+def create_acessibility(
+    accessibility: AccessibilityIn,
+    queries: AcessibilityQueries = Depends(),
+):
+    try:
+        return queries.create_accessibility(accessibility)
+    except ForeignKeyViolation as e:
+        raise HTTPException(status_code=400)
+
+@router.get("/api/acessibility", response_model = AccessibilityListOut)
+def get_accessibilities(
+    queries: AcessibilityQueries = Depends()
+):
+    return {"accessibilities": queries.get_all_accessibilities()}
