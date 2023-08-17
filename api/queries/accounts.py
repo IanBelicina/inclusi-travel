@@ -75,30 +75,30 @@ class AccountQueries:
                     return None
 
 
-def create_account(self, data) -> AccountOut:
-        with pool.connection() as conn:
-            with conn.cursor() as cur:
-                params = [
-                    data.first_name,
-                    data.last_name,
-                    data.date_of_birth,
-                    data.email,
-                    data.username,
-                ]
-                cur.execute(
-                    """
-                    INSERT INTO accounts(first_name, last_name, date_of_birth, email, username, password)
-                    VALUES (%s, %s, %s, %s, %s, %s);
-                    RETURNING id, first_name, last_name, date_of_birth, email, username
-                    """,
-                    params,
-                )
+# def create_account(self, data) -> AccountOut:
+#         with pool.connection() as conn:
+#             with conn.cursor() as cur:
+#                 params = [
+#                     data.first_name,
+#                     data.last_name,
+#                     data.date_of_birth,
+#                     data.email,
+#                     data.username,
+#                 ]
+#                 cur.execute(
+#                     """
+#                     INSERT INTO accounts(first_name, last_name, date_of_birth, email, username, password)
+#                     VALUES (%s, %s, %s, %s, %s, %s);
+#                     RETURNING id, first_name, last_name, date_of_birth, email, username
+#                     """,
+#                     params,
+#                 )
 
-                record = None
-                row = cur.fetchone()
-                if row is not None:
-                    record = {}
-                    for i, column in enumerate(cur.description):
-                        record[column.name] = row[i]
+#                 record = None
+#                 row = cur.fetchone()
+#                 if row is not None:
+#                     record = {}
+#                     for i, column in enumerate(cur.description):
+#                         record[column.name] = row[i]
 
-                return AccountOut(**record)
+#                 return AccountOut(**record)
