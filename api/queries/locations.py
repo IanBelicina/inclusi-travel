@@ -4,6 +4,8 @@ from typing import List
 from pydantic import BaseModel
 from datetime import date
 from datetime import date
+from typing import Optional
+
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
@@ -13,7 +15,8 @@ class LocationsIn(BaseModel):
     city: str
     state: str
     location_name: str
-    picture: str
+    picture: Optional[str]
+    # accesibility_tags:int
     updated_on: date
 
 
@@ -23,7 +26,8 @@ class LocationsOut(BaseModel):
     city: str
     state: str
     location_name: str
-    picture: str
+    picture: Optional[str]
+    # average_rating: int
     updated_on: date
 
 class LocationListOut(BaseModel):
