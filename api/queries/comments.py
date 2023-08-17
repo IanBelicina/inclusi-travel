@@ -25,30 +25,53 @@ class CommentOut(BaseModel):
 
 class CommentRepository:
 
-    def create_comment(self, comment) ->Union[CommentOut,Error]:
+    def delete_comment(self, comment_id:int) -> Union[None,Error]:
+
+        try:
+            with pool.connection() as conn:
+                    with conn.cursor() as db:
+                        db.execute(
+                            """
+                            DELETE FROM comments
+                            WHERE id = %s
+                            """,
+                            [comment_id]
+                        )
+                        return True
+        except Exception as e:
+            print(e)
+            return {"message":"Could not delete comment"}
+
+
+    def create_comment(self, comment) ->Union[None,Error]:
 
         id = None
-        with pool.connection() as conn:
-                with conn.cursor() as db:
-                    db.execute(
-                        """
-                        INSERT INTO comments (
-                            account_id
-                            ,review_id
-                            ,content
-                            ,created_on
+        try:
+            with pool.connection() as conn:
+                    with conn.cursor() as db:
+                        db.execute(
+                            """
+                            INSERT INTO comments (
+                                account_id
+                                ,review_id
+                                ,content
+                                ,created_on
+                            )
+                            VALUES(%s, %s, %s, %s)
+                            RETURNING id
+                            """,
+                            [
+                                comment.account_id,
+                                comment.review_id,
+                                comment.content,
+                                comment.created_on
+                            ]
                         )
-                        VALUES(%s, %s, %s, %s)
-                        RETURNING id
-                        """,
-                        [
-                            comment.account_id,
-                            comment.review_id,
-                            comment.content,
-                            comment.created_on
-                        ]
-                    )
-                    return True
+                        return True
+        except Exception as e:
+            print(e)
+            return {"message":"Could not create comment"}
+
 
 
 
@@ -103,7 +126,7 @@ class CommentRepository:
 
         except Exception as e:
             print(e)
-            return {"message":"Could not get all comments"}
+            return {"message":"Could not get comment"}
 
 
     def get_all_review_comments(self, review_id:int) -> Union[List[CommentOut], Error]:

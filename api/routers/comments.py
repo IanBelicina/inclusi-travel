@@ -21,9 +21,16 @@ def get_comment(
     return repo.get_comment(comment_id)
 
 
-@router.post("/reviews/comments", response_model = bool)
+@router.post("/reviews/comments", response_model = Union[bool,Error])
 def create_comment(
     comment:CommentIn,
     repo: CommentRepository = Depends()
 ):
     return repo.create_comment(comment)
+
+@router.delete("/reviews/comments/{comment_id}", response_model = Union[bool,Error])
+def create_comment(
+    comment_id:int,
+    repo: CommentRepository = Depends()
+):
+    return repo.delete_comment(comment_id)
