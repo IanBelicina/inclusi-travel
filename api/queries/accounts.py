@@ -1,7 +1,11 @@
+import os
+from psycopg_pool import ConnectionPool
 from pydantic import BaseModel
 from datetime import date
 from queries.pool import pool
 from typing import List
+
+pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
 
 class AccountIn(BaseModel):
@@ -19,7 +23,7 @@ class AccountOut(BaseModel):
     date_of_birth: date
     email: str
     username: str
-    password: str
+
 
 class AccountListOut(BaseModel):
     accounts: List[AccountOut]
@@ -31,7 +35,7 @@ class AccountQueries:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, first_name, last_name, date_of_birth, email, username, password
+                    SELECT id, first_name, last_name, date_of_birth, email, username
                     FROM accounts
                     """
                 )
@@ -51,7 +55,7 @@ class AccountQueries:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, first_name, last_name, date_of_birth, email, username, password
+                    SELECT id, first_name, last_name, date_of_birth, email, username
                     FROM accounts
                     WHERE id = %s
                     """,
@@ -66,15 +70,35 @@ class AccountQueries:
                         date_of_birth = row[3],
                         email = row[4],
                         username = row[5],
-                        password = row[6],
                     )
                 else:
                     return None
 
-    # def create_account(self,account) -> AccountOut | None:
-    #     id = None
-    #     with pool.connection() as conn:
-    #         with conn.cursor() as cur:
-    #             cur.execute(
 
-    #             )
+def create_account(self, data) -> AccountOut:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                params = [
+                    data.first_name,
+                    data.last_name,
+                    data.date_of_birth,
+                    data.email,
+                    data.username,
+                ]
+                cur.execute(
+                    """
+                    INSERT INTO accounts(first_name, last_name, date_of_birth, email, username, password)
+                    VALUES (%s, %s, %s, %s, %s, %s);
+                    RETURNING id, first_name, last_name, date_of_birth, email, username
+                    """,
+                    params,
+                )
+
+                record = None
+                row = cur.fetchone()
+                if row is not None:
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+
+                return AccountOut(**record)

@@ -25,3 +25,14 @@ def get_accounts(
 ):
 
     return {"accounts": queries.get_all_accounts()}
+
+
+@router.post("/api/accounts", response_model=AccountOut)
+def create_account(
+    account: AccountIn,
+    queries: AccountQueries = Depends(),
+):
+    try:
+        return queries.create_account(account)
+    except ForeignKeyViolation as e:
+        raise HTTPException(status_code = 400)
