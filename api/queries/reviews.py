@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from queries.pool import pool
 from typing import List
-from queries.locations import LocationsOut # LocationQueries
-from queries.accounts import AccountOut
+from queries.locations import LocationsOut, LocationQueries
+from queries.accounts import AccountOut, AccountQueries
 
 from datetime import date
 
@@ -51,10 +51,22 @@ class ReviewQueries:
                     column_value = row[i]      # Get the corresponding value from the row
                     row_dict[column_name] = column_value  # Add the column name-value pair to the dictionary
 
-                # Create a ReviewOut object using the dictionary values
+                location_id = row_dict['location_id']
+                account_id = row_dict['account_id']
+
+                location_instance = LocationQueries().get_a_location(location_id)
+                account_instance = AccountQueries().get_account(account_id)
+
+                # Set the instances in the row_dict
+                row_dict['location_id'] = location_instance
+                row_dict['account_id'] = account_instance
+
+                # Create a ReviewOut object using the updated row_dict
                 review_out_object = ReviewOut(**row_dict)
 
                 # Return the newly created ReviewOut object
+                return review_out_object
+
                 return review_out_object
 
     def get_all_reviews(self) -> List[ReviewOut]:
