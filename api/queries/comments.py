@@ -25,6 +25,87 @@ class CommentOut(BaseModel):
 
 class CommentRepository:
 
+    def create_comment(self, comment) ->Union[CommentOut,Error]:
+
+        id = None
+        with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        INSERT INTO comments (
+                            account_id
+                            ,review_id
+                            ,content
+                            ,created_on
+                        )
+                        VALUES(%s, %s, %s, %s)
+                        RETURNING id
+                        """,
+                        [
+                            comment.account_id,
+                            comment.review_id,
+                            comment.content,
+                            comment.created_on
+                        ]
+                    )
+                    return True
+
+
+
+
+
+    def get_comment(self, comment_id:int) ->Union[CommentOut,Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        select
+                            c.id as comment_id
+                            ,c.account_id as account_id_comment
+                            ,c.content as content
+                            ,c.created_on as created_on_comment
+
+                            ,r.id as review_id
+                            ,r.location_id as location_id
+
+                            ,r.rating as rating
+                            ,r.body as body
+                            ,r.created_on as created_on_review
+
+                            ,a.id as account_id
+                            ,a.first_name as first_name
+                            ,a.last_name as last_name
+                            ,a.date_of_birth as date_of_birth
+                            ,a.email as email
+                            ,a.username as username
+                            ,a.password as password
+
+                            ,l.id as location_id_location
+                            ,l.address as address
+                            ,l.city as city
+                            ,l.state as state
+                            ,l.location_name as location_name
+                            ,l.picture as picture
+                            ,l.updated_on as updated_on
+                        from comments c
+                        join reviews r on c.review_id = r.id
+                        join accounts a on r.account_id = a.id
+                        join locations l on r.location_id = l.id
+                        where c.id =  %s
+                        """,
+                        [comment_id]
+                    )
+
+                    row = db.fetchone()
+
+                    return self.comment_record_to_dict(row, db.description)
+
+        except Exception as e:
+            print(e)
+            return {"message":"Could not get all comments"}
+
+
     def get_all_review_comments(self, review_id:int) -> Union[List[CommentOut], Error]:
 
         try:
