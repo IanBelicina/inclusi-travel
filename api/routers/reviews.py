@@ -25,7 +25,8 @@ def create_review(
     
     return queries.create_review(review)
 
-@router.delete("/api/reviews/{id}/", response_model =bool)
+#Delete a review
+@router.delete("/api/reviews/{id}", response_model =bool)
 def delete_review(
     id: int,
     queries: ReviewQueries = Depends()
@@ -33,6 +34,7 @@ def delete_review(
     queries.delete_review(id)
     return True
 
+#get revie
 @router.get("/api/reviews/{id}", response_model= ReviewOut)
 def get_review(
         id:int,
@@ -43,3 +45,21 @@ def get_review(
         raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
     else:
         return record
+    
+
+    #update review
+@router.put("/api/reviews/{id}", response_model=Optional[ReviewOut])
+def update_review(
+    id: int,
+    updated_review: ReviewIn,
+    queries: ReviewQueries = Depends(),
+):
+    existing_review = queries.get_review(id)
+    if existing_review is None:
+        raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
+
+    updated_review_out = queries.update_review(id, updated_review)
+    if updated_review_out is None:
+        raise HTTPException(status_code=500, detail="Failed to update review")
+
+    return updated_review_out

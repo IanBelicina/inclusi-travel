@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from queries.pool import pool
-from typing import List
+from typing import List, Optional
 from queries.locations import LocationsOut, LocationQueries
 from queries.accounts import AccountOut, AccountQueries
 
@@ -76,7 +76,7 @@ class ReviewQueries:
                         """
                         SELECT r.id, r.location_id, r.account_id, r.rating,
                         r.body, r.created_on, l.location_name, l.address, l.city, l.state, l.updated_on, l.picture,
-                        a.first_name, a.last_name, a.date_of_birth, a.email, a.username, a.password
+                        a.first_name, a.last_name, a.date_of_birth, a.email, a.username
                         FROM reviews r
                         JOIN locations l ON r.location_id = l.id
                         JOIN accounts a ON r.account_id = a.id
@@ -108,7 +108,7 @@ class ReviewQueries:
                             date_of_birth=record['date_of_birth'],
                             email=record['email'],
                             username=record['username'],
-                            password=record['password']
+                            # password=record['password']
                         )
                         
                         record['location_id'] = location
@@ -136,7 +136,7 @@ class ReviewQueries:
                     """
                     SELECT r.id, r.location_id, r.account_id, r.rating,
                     r.body, r.created_on, l.location_name, l.address, l.city, l.state, l.updated_on, l.picture,
-                    a.first_name, a.last_name, a.date_of_birth, a.email, a.username, a.password
+                    a.first_name, a.last_name, a.date_of_birth, a.email, a.username
                     FROM reviews r
                     JOIN locations l ON r.location_id = l.id
                     JOIN accounts a ON r.account_id = a.id
@@ -168,7 +168,7 @@ class ReviewQueries:
                         date_of_birth=record['date_of_birth'],
                         email=record['email'],
                         username=record['username'],
-                        password=record['password']
+                        # password=record['password']
                     )
 
                     record['location_id'] = location
@@ -177,3 +177,40 @@ class ReviewQueries:
                     return ReviewOut(**record)
                 else:
                     return None
+                
+    def update_review(self, id: int, updated_review: ReviewIn) -> Optional[ReviewOut]:
+        with pool.getconn() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    UPDATE reviews
+                    SET location_id = %s, account_id = %s, rating = %s, body = %s
+                    WHERE id = %s
+                    RETURNING id, location_id, account_id, rating, body, created_on
+                    """,
+                    (updated_review.location_id, updated_review.account_id, updated_review.rating, updated_review.body, id),
+                )
+                
+                row = cur.fetchone()
+
+                if row:
+                    row_dict = {}
+                    for i, column in enumerate(cur.description):
+                        column_name = column.name  
+                        column_value = row[i]      
+                        row_dict[column_name] = column_value  
+
+                    location_id = row_dict['location_id']
+                    account_id = row_dict['account_id']
+
+                    location_instance = LocationQueries().get_a_location(location_id)
+                    account_instance = AccountQueries().get_account(account_id)
+
+                    row_dict['location_id'] = location_instance
+                    row_dict['account_id'] = account_instance
+
+                    review_out_object = ReviewOut(**row_dict)
+
+                    return review_out_object
+                else:
+                    return None            
