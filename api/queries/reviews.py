@@ -42,14 +42,14 @@ class ReviewQueries:
                     
                 row = cur.fetchone()
 
-                # Initialize an empty dictionary to store the column name-value pairs
+                
                 row_dict = {}
 
-                # Loop through the columns and values in the fetched row
+                
                 for i, column in enumerate(cur.description):
-                    column_name = column.name  # Get the column name
-                    column_value = row[i]      # Get the corresponding value from the row
-                    row_dict[column_name] = column_value  # Add the column name-value pair to the dictionary
+                    column_name = column.name  
+                    column_value = row[i]      
+                    row_dict[column_name] = column_value  
 
                 location_id = row_dict['location_id']
                 account_id = row_dict['account_id']
@@ -57,17 +57,17 @@ class ReviewQueries:
                 location_instance = LocationQueries().get_a_location(location_id)
                 account_instance = AccountQueries().get_account(account_id)
 
-                # Set the instances in the row_dict
+                
                 row_dict['location_id'] = location_instance
                 row_dict['account_id'] = account_instance
 
-                # Create a ReviewOut object using the updated row_dict
+                
                 review_out_object = ReviewOut(**row_dict)
 
-                # Return the newly created ReviewOut object
+                
                 return review_out_object
 
-                return review_out_object
+                
 
     def get_all_reviews(self) -> List[ReviewOut]:
             with pool.connection() as conn:
