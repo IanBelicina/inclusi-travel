@@ -21,16 +21,29 @@ def get_comment(
     return repo.get_comment(comment_id)
 
 
-@router.post("/reviews/comments", response_model = Union[bool,Error])
+@router.post("/reviews/comments", response_model = Union[CommentOut,Error])
 def create_comment(
     comment:CommentIn,
     repo: CommentRepository = Depends()
 ):
-    return repo.create_comment(comment)
+    # return repo.create_comment(comment)
+    try:
+        return repo.create_comment(comment)
+    except pydantic.ValidationError as validation_error:
+
+        return Error(message="Validation error occurred")
 
 @router.delete("/reviews/comments/{comment_id}", response_model = Union[bool,Error])
-def create_comment(
+def delete_comment(
     comment_id:int,
     repo: CommentRepository = Depends()
 ):
     return repo.delete_comment(comment_id)
+
+@router.put("/reviews/comments/{comment_id}", response_model = Union[CommentOut,Error])
+def update(
+    comment: CommentIn,
+    comment_id:int,
+    repo: CommentRepository = Depends()
+):
+    return repo.update_comment(comment_id,comment)

@@ -25,6 +25,35 @@ class CommentOut(BaseModel):
 
 class CommentRepository:
 
+    def update_comment(self, comment_id:int, comment:CommentIn)->Union[CommentOut,Error]:
+        try:
+            with pool.connection() as conn:
+                    with conn.cursor() as db:
+                        db.execute(
+                            """
+                            UPDATE comments
+                            SET
+                                account_id = %s
+                                ,review_id = %s
+                                ,content = %s
+                                ,created_on = %s
+                            WHERE id = %s
+                            """,
+                            [
+                                comment.account_id,
+                                comment.review_id,
+                                comment.content,
+                                comment.created_on,
+                                comment_id
+                            ]
+                        )
+            return self.get_comment(comment_id)
+        except Exception as e:
+            print(e)
+            return {"message":"Could not update comment"}
+
+
+
     def delete_comment(self, comment_id:int) -> Union[None,Error]:
 
         try:
@@ -48,26 +77,32 @@ class CommentRepository:
         id = None
         try:
             with pool.connection() as conn:
-                    with conn.cursor() as db:
-                        db.execute(
-                            """
-                            INSERT INTO comments (
-                                account_id
-                                ,review_id
-                                ,content
-                                ,created_on
-                            )
-                            VALUES(%s, %s, %s, %s)
-                            RETURNING id
-                            """,
-                            [
-                                comment.account_id,
-                                comment.review_id,
-                                comment.content,
-                                comment.created_on
-                            ]
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        INSERT INTO comments (
+                            account_id
+                            ,review_id
+                            ,content
+                            ,created_on
                         )
-                        return True
+                        VALUES(%s, %s, %s, %s)
+                        RETURNING id
+                        """,
+                        [
+                            comment.account_id,
+                            comment.review_id,
+                            comment.content,
+                            comment.created_on
+                        ]
+                    )
+                    row = db.fetchone()
+                    id = row[0]
+                    # print("id",id)
+
+            return self.get_comment(id)
+
+                    # return True
         except Exception as e:
             print(e)
             return {"message":"Could not create comment"}
