@@ -6,6 +6,7 @@ from queries.pool import pool
 
 
 
+
 class AccountIn(BaseModel):
     first_name: str
     last_name: str
@@ -21,4 +22,3 @@ class AccountOut(BaseModel):
     date_of_birth: date
     email: str
     username: str
-    password: str
