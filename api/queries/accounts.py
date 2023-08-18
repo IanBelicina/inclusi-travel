@@ -24,7 +24,6 @@ class AccountOut(BaseModel):
     email: str
     username: str
 
-
 class AccountListOut(BaseModel):
     accounts: List[AccountOut]
 
@@ -75,7 +74,7 @@ class AccountQueries:
                     return None
 
 
-def create_account(self, data) -> AccountOut:
+    def create_account(self, data) -> AccountOut:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 params = [
@@ -84,12 +83,13 @@ def create_account(self, data) -> AccountOut:
                     data.date_of_birth,
                     data.email,
                     data.username,
+                    data.password,
                 ]
                 cur.execute(
                     """
                     INSERT INTO accounts(first_name, last_name, date_of_birth, email, username, password)
-                    VALUES (%s, %s, %s, %s, %s, %s);
-                    RETURNING id, first_name, last_name, date_of_birth, email, username
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                    RETURNING id, first_name, last_name, date_of_birth, email, username, password
                     """,
                     params,
                 )

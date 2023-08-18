@@ -5,10 +5,9 @@ from pydantic import BaseModel
 from datetime import date
 from datetime import date
 from typing import Optional
-from accessibility.py import AccessibilityOut
+from queries.accessibility import AccessibilityOut
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
-
 
 
 class LocationsIn(BaseModel):
@@ -17,6 +16,7 @@ class LocationsIn(BaseModel):
     state: str
     location_name: str
     picture: Optional[str]
+    accesibility_tags:int
     updated_on: date
 
 
@@ -27,15 +27,23 @@ class LocationsOut(BaseModel):
     state: str
     location_name: str
     picture: Optional[str]
-    average_rating: int
     updated_on: date
-
-class Location_Accessibility(BaseModel):
-    location: LocationsOut
-    accessesibility: AccessibilityOut
 
 class LocationListOut(BaseModel):
     locations: list[LocationsOut]
+
+class AccessibilityListOut(BaseModel):
+    accessibilities: list[AccessibilityOut]
+
+class Location_AccessibilityOut(BaseModel):
+    location: int
+    accessibility: list
+
+class Location_AccessibilityIn(BaseModel):
+    location: int
+
+class LocationAccessibilityList(BaseModel):
+    location: list[Location_AccessibilityOut]
 
 class LocationQueries:
     def get_all_locations(self)->List[LocationsOut]:
@@ -143,3 +151,36 @@ class LocationQueries:
                     for i, column in enumerate(cur.description):
                         record[column.name] = row[i]
                 return LocationsOut(**record)
+
+    def associate_location_accessibility(self, location_id: int, accessibility_id: int) -> None:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    INSERT INTO location_accessibilities (location_id, acessibility_id)
+                    VALUES (%s, %s)
+                    ON CONFLICT DO NOTHING
+                    """,
+                    (location_id, accessibility_id),
+                )
+
+    def get_location_accessibilities(self, location_id: int) -> List[AccessibilityOut]:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT a.id, a.name
+                    FROM accessibilities a
+                    JOIN location_accessibilities la ON a.id = la.acessibility_id
+                    WHERE la.location_id = %s
+                    """,
+                    [location_id],
+                )
+                results = []
+                for row in cur.fetchall():
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+                    results.append(AccessibilityOut(**record))
+
+                return results

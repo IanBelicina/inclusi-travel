@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from psycopg.errors import ForeignKeyViolation
-from queries.locations import LocationsOut, LocationQueries, LocationsIn, LocationListOut
+from queries.locations import LocationsOut, LocationQueries, LocationsIn ,LocationAccessibilityList, LocationListOut, AccessibilityListOut
 
 router = APIRouter()
 
@@ -49,3 +49,20 @@ def update_location(
 ):
     record = queries.update_a_location(id = location_id, data = location)
     return record
+
+@router.get("/api/locations/{location_id}/accessibilities", response_model=AccessibilityListOut)
+def get_location_accessibilities(
+    location_id: int,
+    queries: LocationQueries = Depends(),
+):
+    accessibilities = queries.get_location_accessibilities(location_id)
+    return {"accessibilities": accessibilities}
+
+@router.post("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=bool)
+def associate_location_accessibility(
+    location_id: int,
+    accessibility_id: int,
+    queries: LocationQueries = Depends(),
+):
+    queries.associate_location_accessibility(location_id, accessibility_id)
+    return True
