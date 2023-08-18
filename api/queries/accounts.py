@@ -5,7 +5,9 @@ from datetime import date
 from queries.pool import pool
 from typing import List
 
+
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+
 
 
 class AccountIn(BaseModel):
