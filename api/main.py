@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import comments, accounts, accessibility
+from routers import comments, accounts, accessibility, reviews
 import os
 from routers import locations
 
