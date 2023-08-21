@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routers import comments, accounts, accessibility, reviews
 import os
 from routers import locations
+from authenticator import authenticator
 
 app = FastAPI()
 app.include_router(comments.router)
@@ -10,6 +11,7 @@ app.include_router(accounts.router)
 app.include_router(accessibility.router)
 app.include_router(reviews.router)
 app.include_router(locations.router)
+app.include_router(authenticator.router)
 
 
 app.add_middleware(

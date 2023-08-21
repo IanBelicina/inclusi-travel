@@ -7,7 +7,8 @@ from typing import List
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
-
+class DuplicateAccountError(ValueError):
+    pass
 
 
 class AccountIn(BaseModel):
@@ -29,6 +30,9 @@ class AccountOut(BaseModel):
 
 class AccountListOut(BaseModel):
     accounts: List[AccountOut]
+
+class AccountOutWithPassword(AccountOut):
+    hashed_password: str
 
 
 class AccountQueries:
@@ -52,7 +56,7 @@ class AccountQueries:
 
 
 
-    def get_account(self, account_id) -> AccountOut | None:
+    def get_account(self, account_id) -> AccountOutWithPassword | None:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
@@ -77,7 +81,7 @@ class AccountQueries:
                     return None
 
 
-    def create_account(self, data) -> AccountOut:
+    def create_account(self, data: AccountIn, hashed_password: str) -> AccountOut:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 params = [
