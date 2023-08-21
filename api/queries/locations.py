@@ -184,3 +184,14 @@ class LocationQueries:
                     results.append(AccessibilityOut(**record))
 
                 return results
+    def delete_location(self,location_id: int, accessibility_id: int) ->None:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    DELETE FROM location_accessibilities
+                    WHERE location_id = %s and acessibility_id = %s
+                    """,
+                    (location_id, accessibility_id),
+
+                )
