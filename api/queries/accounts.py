@@ -56,32 +56,33 @@ class AccountQueries:
 
 
 
-    def get_account(self, account_id) -> AccountOutWithPassword | None:
+    def get_account(self, username) -> AccountOutWithPassword | None:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, first_name, last_name, date_of_birth, email, username
+                    SELECT id, first_name, last_name, date_of_birth, email, username,password
                     FROM accounts
-                    WHERE id = %s
+                    WHERE username = %s
                     """,
-                    [account_id],
+                    [username],
                 )
                 row = cur.fetchone()
                 if row is not None:
-                    return AccountOut(
+                    return AccountOutWithPassword(
                         id = row[0],
                         first_name = row[1],
                         last_name=row[2],
                         date_of_birth = row[3],
                         email = row[4],
                         username = row[5],
+                        hashed_password = row[6]
                     )
                 else:
                     return None
 
 
-    def create_account(self, data: AccountIn, hashed_password: str) -> AccountOut:
+    def create_account(self, data: AccountIn, hashed_password) -> AccountOutWithPassword:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 params = [
@@ -90,7 +91,7 @@ class AccountQueries:
                     data.date_of_birth,
                     data.email,
                     data.username,
-                    data.password,
+                    hashed_password,
                 ]
                 cur.execute(
                     """
@@ -107,5 +108,5 @@ class AccountQueries:
                     record = {}
                     for i, column in enumerate(cur.description):
                         record[column.name] = row[i]
-
-                return AccountOut(**record)
+                    record["hashed_password"] = record["password"]
+                return AccountOutWithPassword(**record)

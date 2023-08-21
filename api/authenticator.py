@@ -8,12 +8,12 @@ from queries.accounts import AccountQueries, AccountOut, AccountOutWithPassword
 class MyAuthenticator(Authenticator):
     async def get_account_data(
         self,
-        id: int,
+        username: str,
         accounts: AccountQueries,
-    ):
+    ) -> AccountOutWithPassword:
         # Use your repo to get the account based on the
         # username (which could be an email)
-        return accounts.get_account(id)
+        return accounts.get_account(username)
 
     def get_account_getter(
         self,
