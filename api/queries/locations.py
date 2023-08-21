@@ -16,7 +16,6 @@ class LocationsIn(BaseModel):
     state: str
     location_name: str
     picture: Optional[str]
-    accesibility_tags:int
     updated_on: date
 
 
@@ -184,7 +183,7 @@ class LocationQueries:
                     results.append(AccessibilityOut(**record))
 
                 return results
-    def delete_location(self,location_id: int, accessibility_id: int) ->None:
+    def delete_accessibility_from_location(self,location_id: int, accessibility_id: int) ->None:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
