@@ -73,10 +73,10 @@ def associate_location_accessibility(
     return True
 
 @router.delete("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=bool)
-def delete_location(
+def delete_accessibility_from_location(
     location_id: int,
     accessibility_id: int,
     queries: LocationQueries = Depends()
 ):
-    queries.delete_location(location_id =location_id,accessibility_id=accessibility_id)
+    queries.delete_accessibility_from_location(location_id =location_id,accessibility_id=accessibility_id)
     return True
