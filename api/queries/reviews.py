@@ -55,7 +55,16 @@ class ReviewQueries:
                 account_id = row_dict['account_id']
 
                 location_instance = LocationQueries().get_a_location(location_id)
-                account_instance = AccountQueries().get_account(account_id)
+                accounts_list = AccountQueries().get_all_accounts()
+                # print(accounts_list)
+                account_username = None
+                for account in accounts_list:
+                    if account.id == account_id:
+                        # print("account username", account.username)
+                        account_username = account.username
+
+                account_instance = AccountQueries().get_account(account_username)
+
 
 
                 row_dict['location_id'] = location_instance
@@ -204,7 +213,19 @@ class ReviewQueries:
                     account_id = row_dict['account_id']
 
                     location_instance = LocationQueries().get_a_location(location_id)
-                    account_instance = AccountQueries().get_account(account_id)
+
+                    accounts_list = AccountQueries().get_all_accounts()
+                    # print(accounts_list)
+                    account_username = None
+                    for account in accounts_list:
+                        if account.id == account_id:
+                            # print("account username", account.username)
+                            account_username = account.username
+
+                    account_instance = AccountQueries().get_account(account_username)
+
+
+
 
                     row_dict['location_id'] = location_instance
                     row_dict['account_id'] = account_instance
