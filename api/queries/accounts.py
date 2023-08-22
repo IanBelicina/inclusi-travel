@@ -1,6 +1,6 @@
 import os
 from psycopg_pool import ConnectionPool
-from pydantic import BaseModel
+from pydantic import BaseModel, root_validator
 from datetime import date
 from queries.pool import pool
 from typing import List
@@ -8,7 +8,8 @@ from typing import List
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
 
-
+class DuplicateAccountError(ValueError):
+    pass
 
 class AccountIn(BaseModel):
     first_name: str
@@ -26,6 +27,14 @@ class AccountOut(BaseModel):
     email: str
     username: str
 
+    @root_validator
+    def convert_date_of_birth_to_str(cls, values):
+        if "date_of_birth" in values and isinstance(values["date_of_birth"], date):
+            values["date_of_birth"] = values["date_of_birth"].isoformat()
+        return values
+
+class AccountOutWithPassword(AccountOut):
+    hashed_password: str
 
 class AccountListOut(BaseModel):
     accounts: List[AccountOut]
@@ -52,32 +61,33 @@ class AccountQueries:
 
 
 
-    def get_account(self, account_id) -> AccountOut | None:
+    def get_account(self, username) -> AccountOutWithPassword | None:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
-                    SELECT id, first_name, last_name, date_of_birth, email, username
+                    SELECT id, first_name, last_name, date_of_birth, email, username, password
                     FROM accounts
-                    WHERE id = %s
+                    WHERE username = %s
                     """,
-                    [account_id],
+                    [username],
                 )
                 row = cur.fetchone()
                 if row is not None:
-                    return AccountOut(
+                    return AccountOutWithPassword(
                         id = row[0],
                         first_name = row[1],
                         last_name=row[2],
                         date_of_birth = row[3],
                         email = row[4],
                         username = row[5],
+                        hashed_password=row[6],
                     )
                 else:
                     return None
 
 
-    def create_account(self, data) -> AccountOut:
+    def create_account(self, data: AccountIn, hashed_password: str) -> AccountOutWithPassword:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 params = [
@@ -86,7 +96,7 @@ class AccountQueries:
                     data.date_of_birth,
                     data.email,
                     data.username,
-                    data.password,
+                    hashed_password,
                 ]
                 cur.execute(
                     """
