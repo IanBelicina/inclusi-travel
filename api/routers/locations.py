@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from psycopg.errors import ForeignKeyViolation
-from queries.locations import LocationsOut, LocationQueries, LocationsIn ,LocationAccessibilityList, LocationListOut, AccessibilityListOut
-
+from queries.locations import LocationsOut, LocationQueries, LocationsIn ,LocationAccessibilityList, LocationListOut, AccessibilityListOut, Error
+from authenticator import authenticator
 router = APIRouter()
 
 
@@ -15,12 +15,15 @@ def get_locations(
 @router.post("/api/locations/", response_model = LocationsOut)
 def create_location(
     location: LocationsIn,
+    account_data: dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends(),
 ):
-    try:
-        return queries.create_location(location)
-    except ForeignKeyViolation as e:
-        raise HTTPException(status_code=400)
+    if account_data:
+        try:
+            return queries.create_location(location)
+        except ForeignKeyViolation as e:
+            raise HTTPException(status_code=400)
+
 
 @router.delete("/api/locations/{location_id}/", response_model =bool)
 def delete_location(
@@ -45,10 +48,12 @@ def get_location(
 def update_location(
     location_id: int,
     location: LocationsIn,
+    account_data: dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends()
 ):
-    record = queries.update_a_location(id = location_id, data = location)
-    return record
+    if account_data:
+        record = queries.update_a_location(id = location_id, data = location)
+        return record
 
 @router.get("/api/locations/{location_id}/accessibilities", response_model=AccessibilityListOut)
 def get_location_accessibilities(
@@ -58,19 +63,21 @@ def get_location_accessibilities(
     accessibilities = queries.get_location_accessibilities(location_id)
     return {"accessibilities": accessibilities}
 
-@router.post("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=bool)
+@router.post("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=Union[bool,Error])
 def associate_location_accessibility(
     location_id: int,
     accessibility_id: int,
+    account_data: dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends(),
 ):
-    query =queries.get_location_accessibilities(location_id=location_id)
-    for i in range(len(query)):
-        if accessibility_id == query[i].id:
-            return False
+    if account_data:
+        query =queries.get_location_accessibilities(location_id=location_id)
+        for i in range(len(query)):
+            if accessibility_id == query[i].id:
+                return False
 
-    queries.associate_location_accessibility(location_id, accessibility_id)
-    return True
+        queries.associate_location_accessibility(location_id, accessibility_id)
+        return True
 
 @router.delete("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=bool)
 def delete_accessibility_from_location(
