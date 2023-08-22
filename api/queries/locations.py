@@ -9,8 +9,6 @@ from queries.accessibility import AccessibilityOut
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
-class Error(BaseModel):
-    message:str
 
 class LocationsIn(BaseModel):
     address: str
