@@ -1,3 +1,4 @@
+from authenticator import authenticator
 from fastapi import APIRouter,Depends
 from typing import Optional, Union,List
 from queries.comments import CommentIn,CommentOut,Error,CommentRepository
@@ -8,7 +9,7 @@ router = APIRouter()
 @router.get("/reviews/{review_id}/comments", response_model = Union[List[CommentOut],Error])
 def get_all_review_comments(
     review_id:int,
-    repo: CommentRepository = Depends()
+    repo: CommentRepository = Depends(),
 ):
     return repo.get_all_review_comments(review_id)
 
@@ -16,7 +17,7 @@ def get_all_review_comments(
 @router.get("/reviews/comments/{comment_id}", response_model = Union[CommentOut,Error])
 def get_comment(
     comment_id:int,
-    repo: CommentRepository = Depends()
+    repo: CommentRepository = Depends(),
 ):
     return repo.get_comment(comment_id)
 
@@ -24,7 +25,8 @@ def get_comment(
 @router.post("/reviews/comments", response_model = Union[CommentOut,Error])
 def create_comment(
     comment:CommentIn,
-    repo: CommentRepository = Depends()
+    repo: CommentRepository = Depends(),
+    dict = Depends(authenticator.get_current_account_data)
 ):
     # return repo.create_comment(comment)
     try:
@@ -36,7 +38,8 @@ def create_comment(
 @router.delete("/reviews/comments/{comment_id}", response_model = Union[bool,Error])
 def delete_comment(
     comment_id:int,
-    repo: CommentRepository = Depends()
+    repo: CommentRepository = Depends(),
+    dict = Depends(authenticator.get_current_account_data)
 ):
     return repo.delete_comment(comment_id)
 
@@ -44,6 +47,7 @@ def delete_comment(
 def update(
     comment: CommentIn,
     comment_id:int,
-    repo: CommentRepository = Depends()
+    repo: CommentRepository = Depends(),
+    dict = Depends(authenticator.get_current_account_data)
 ):
     return repo.update_comment(comment_id,comment)
