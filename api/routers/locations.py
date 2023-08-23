@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from psycopg.errors import ForeignKeyViolation
 from queries.locations import LocationsOut, LocationQueries, LocationsIn ,LocationAccessibilityList, LocationListOut, AccessibilityListOut
-
+from authenticator import authenticator
 router = APIRouter()
 
 
@@ -15,6 +15,7 @@ def get_locations(
 @router.post("/api/locations/", response_model = LocationsOut)
 def create_location(
     location: LocationsIn,
+    dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends(),
 ):
     try:
@@ -25,11 +26,14 @@ def create_location(
 @router.delete("/api/locations/{location_id}/", response_model =bool)
 def delete_location(
     location_id: int,
+    dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends()
 ):
-    queries.delete_location(location_id)
-    return True
-
+    try:
+        queries.delete_location(location_id)
+        return True
+    except:
+        return False
 @router.get("/api/locations/{location_id}", response_model = LocationsOut)
 def get_location(
     location_id:int,
@@ -45,10 +49,15 @@ def get_location(
 def update_location(
     location_id: int,
     location: LocationsIn,
+    dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends()
 ):
     record = queries.update_a_location(id = location_id, data = location)
-    return record
+    if record is None:
+        raise HTTPException(status_code=404, detail="Could not update location")
+    else:
+        return record
+
 
 @router.get("/api/locations/{location_id}/accessibilities", response_model=AccessibilityListOut)
 def get_location_accessibilities(
@@ -62,8 +71,10 @@ def get_location_accessibilities(
 def associate_location_accessibility(
     location_id: int,
     accessibility_id: int,
+    dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends(),
 ):
+
     query =queries.get_location_accessibilities(location_id=location_id)
     for i in range(len(query)):
         if accessibility_id == query[i].id:
@@ -76,6 +87,7 @@ def associate_location_accessibility(
 def delete_accessibility_from_location(
     location_id: int,
     accessibility_id: int,
+    dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends()
 ):
     queries.delete_accessibility_from_location(location_id =location_id,accessibility_id=accessibility_id)

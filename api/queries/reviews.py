@@ -41,6 +41,8 @@ class ReviewQueries:
 
 
                 row = cur.fetchone()
+
+
                 row_dict = {}
 
 
@@ -86,7 +88,7 @@ class ReviewQueries:
                         a.first_name, a.last_name, a.date_of_birth, a.email, a.username
                         FROM reviews r
                         JOIN locations l ON r.location_id = l.id
-                        JOIN accounts a ON r.account_id = a.id
+                        JOIN accounts a ON r.account_id = a.username
                         ORDER BY r.created_on;
                         """
                     )
