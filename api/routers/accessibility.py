@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from queries.accessibility import AccessibilityIn, AccessibilityOut, AcessibilityQueries, AccessibilityListOut
 from psycopg.errors import ForeignKeyViolation
+from authenticator import authenticator
 
 router = APIRouter()
 
@@ -8,6 +9,7 @@ router = APIRouter()
 def create_acessibility(
     accessibility: AccessibilityIn,
     queries: AcessibilityQueries = Depends(),
+    dict = Depends(authenticator.get_current_account_data),
 ):
     try:
         return queries.create_accessibility(accessibility)
