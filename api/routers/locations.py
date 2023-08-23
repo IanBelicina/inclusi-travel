@@ -54,7 +54,7 @@ def update_location(
 ):
     record = queries.update_a_location(id = location_id, data = location)
     if record is None:
-        raise HTTPException(status_code=404, detail="No could not update location")
+        raise HTTPException(status_code=404, detail="Could not update location")
     else:
         return record
 

@@ -115,12 +115,13 @@ class LocationQueries:
                 )
                 record = None
                 row = cur.fetchone()
-                if row is not None:
-                    record = {}
-                    for i, column in enumerate(cur.description):
-                        record[column.name] = row[i]
-
+                if row is None:
+                    return None
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
                 return LocationsOut(**record)
+
     def update_a_location(self, id, data) -> LocationsOut:
         with pool.connection() as conn:
             with conn.cursor() as cur:
@@ -145,10 +146,11 @@ class LocationQueries:
                 )
                 record = None
                 row = cur.fetchone()
-                if row is not None:
-                    record = {}
-                    for i, column in enumerate(cur.description):
-                        record[column.name] = row[i]
+                if row is None:
+                    return None
+                record = {}
+                for i, column in enumerate(cur.description):
+                    record[column.name] = row[i]
                 return LocationsOut(**record)
 
     def associate_location_accessibility(self, location_id: int, accessibility_id: int) -> None:
