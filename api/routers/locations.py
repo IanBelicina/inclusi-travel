@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from psycopg.errors import ForeignKeyViolation
-from queries.locations import LocationsOut, LocationQueries, LocationsIn ,LocationAccessibilityList, LocationListOut, AccessibilityListOut
+from queries.locations import LocationsOut, LocationQueries, LocationsIn , LocationListOut, AccessibilityListOut
 from authenticator import authenticator
+from queries.accessibility import AcessibilityQueries
 router = APIRouter()
 
 
@@ -29,11 +30,13 @@ def delete_location(
     dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends()
 ):
-    try:
+    location = queries.get_a_location(location_id)
+    if location is None:
+        raise HTTPException(status_code=404, detail="No location found with id {}".format(location_id))
+    else:
         queries.delete_location(location_id)
         return True
-    except:
-        return False
+
 @router.get("/api/locations/{location_id}", response_model = LocationsOut)
 def get_location(
     location_id:int,
@@ -64,8 +67,12 @@ def get_location_accessibilities(
     location_id: int,
     queries: LocationQueries = Depends(),
 ):
-    accessibilities = queries.get_location_accessibilities(location_id)
-    return {"accessibilities": accessibilities}
+    location = queries.get_a_location(location_id)
+    if location is None:
+        raise HTTPException(status_code=404, detail="No location found with id {}".format(location_id))
+    else:
+        accessibilities = queries.get_location_accessibilities(location_id)
+        return {"accessibilities": accessibilities}
 
 @router.post("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=bool)
 def associate_location_accessibility(
@@ -73,22 +80,47 @@ def associate_location_accessibility(
     accessibility_id: int,
     dict = Depends(authenticator.get_current_account_data),
     queries: LocationQueries = Depends(),
+    accessibility_queries:AcessibilityQueries = Depends()
+
 ):
+    location = queries.get_a_location(location_id)
+    accessibilities=accessibility_queries.get_all_accessibilities()
+    accessibilty =False
+    for acc in accessibilities:
+        if acc.id == accessibility_id:
+            accessibilty =True
+    if location == None:
+        raise HTTPException(status_code=404, detail="No location found with id {}".format(location_id))
+    elif accessibilty ==False:
+        raise HTTPException(status_code=404, detail="No accessbilities found with id {}".format(accessibility_id))
+    else:
+        query =queries.get_location_accessibilities(location_id=location_id)
+        for i in range(len(query)):
+            if accessibility_id == query[i].id:
+                raise HTTPException(status_code=400, detail="Accessility id {} already exists for location id {}".format(accessibility_id,location_id))
 
-    query =queries.get_location_accessibilities(location_id=location_id)
-    for i in range(len(query)):
-        if accessibility_id == query[i].id:
-            return False
-
-    queries.associate_location_accessibility(location_id, accessibility_id)
-    return True
+        queries.associate_location_accessibility(location_id, accessibility_id)
+        return True
 
 @router.delete("/api/locations/{location_id}/accessibilities/{accessibility_id}", response_model=bool)
 def delete_accessibility_from_location(
     location_id: int,
     accessibility_id: int,
     dict = Depends(authenticator.get_current_account_data),
-    queries: LocationQueries = Depends()
+    queries: LocationQueries = Depends(),
+    accessibility_queries:AcessibilityQueries = Depends()
+
 ):
-    queries.delete_accessibility_from_location(location_id =location_id,accessibility_id=accessibility_id)
-    return True
+    location = queries.get_a_location(location_id)
+    accessibilities=accessibility_queries.get_all_accessibilities()
+    accessibilty =False
+    for acc in accessibilities:
+        if acc.id == accessibility_id:
+            accessibilty =True
+    if location == None:
+        raise HTTPException(status_code=404, detail="No location found with id {}".format(location_id))
+    elif accessibilty ==False:
+        raise HTTPException(status_code=404, detail="No accessbilities found with id {}".format(accessibility_id))
+    else:
+        queries.delete_accessibility_from_location(location_id =location_id,accessibility_id=accessibility_id)
+        return True
