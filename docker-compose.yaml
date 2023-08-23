@@ -29,8 +29,8 @@ services:
       - ./api:/app
 
   ghi:
-    image: node:lts-bullseye
-    command: /bin/bash run.sh
+    image: node:14-alpine
+    # command: /bin/bash run.sh
     working_dir: /app
     volumes:
       - ./ghi:/app
@@ -42,3 +42,6 @@ services:
       HOST: "0.0.0.0"
       PUBLIC_URL: http://localhost:3000
       REACT_APP_API_HOST: ${REACT_APP_API_HOST}
+    build:
+      context: ghi
+      dockerfile: Dockerfile.dev
