@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from datetime import date
 from queries.pool import pool
 from typing import List
+from fastapi import HTTPException
 
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
@@ -27,21 +28,33 @@ class AcessibilityQueries:
                 ]
                 cur.execute(
                     """
-                    INSERT INTO accessibilities (name)
-                    VALUES (%s)
-                    RETURNING id, name
+                    SELECT id, name
+                    FROM accessibilities
+                    WHERE name = %s
                     """,
                     params,
                 )
-
+                if cur.rowcount > 0:
+                    raise HTTPException(status_code=400, detail="The acessibility already exists")
+                else:
+                    cur.execute(
+                        """
+                        INSERT INTO accessibilities (name)
+                        VALUES (%s)
+                        RETURNING id, name
+                        """,
+                        params,
+                    )
                 record = None
                 row = cur.fetchone()
                 if row is not None:
                     record = {}
                     for i, column in enumerate(cur.description):
                         record[column.name] = row[i]
-
-                return AccessibilityOut(**record)
+                if record is not None:
+                    return AccessibilityOut(**record)
+                else:
+                    raise HTTPException(status_code = 404, detail="Unable to create the accessibility")
 
     def get_all_accessibilities(self) -> List[AccessibilityOut]:
         with pool.connection() as conn:

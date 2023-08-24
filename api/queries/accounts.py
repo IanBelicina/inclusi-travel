@@ -4,6 +4,9 @@ from pydantic import BaseModel, root_validator
 from datetime import date
 from queries.pool import pool
 from typing import List
+from fastapi import HTTPException
+
+
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
@@ -56,8 +59,10 @@ class AccountQueries:
                     for i, column in enumerate(cur.description):
                         record[column.name] = row[i]
                     results.append(AccountOut(**record))
-
-                return results
+                if results:
+                    return results
+                else:
+                    raise HTTPException(status_code=404, detail = "No accounts found")
 
 
 
@@ -84,7 +89,7 @@ class AccountQueries:
                         hashed_password=row[6],
                     )
                 else:
-                    return None
+                    raise HTTPException(status_code=404, detail = f"Account with {username} does not exist")
 
 
     def create_account(self, data: AccountIn, hashed_password: str) -> AccountOutWithPassword:
@@ -113,5 +118,4 @@ class AccountQueries:
                     record = {}
                     for i, column in enumerate(cur.description):
                         record[column.name] = row[i]
-
                 return AccountOut(**record)

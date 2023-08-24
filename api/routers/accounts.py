@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, Request, status
 from queries.accounts import AccountQueries, AccountIn, AccountOut, AccountListOut, DuplicateAccountError
-from typing import Optional
+from typing import Optional, Union
 from psycopg.errors import ForeignKeyViolation
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
@@ -43,31 +43,25 @@ def get_accounts(
     return {"accounts": queries.get_all_accounts()}
 
 
-# @router.post("/api/accounts", response_model=AccountOut)
-# def create_account(
-#     account: AccountIn,
-#     queries: AccountQueries = Depends(),
-# ):
-#     try:
-#         return queries.create_account(account)
-#     except ForeignKeyViolation as e:
-#         raise HTTPException(status_code = 400)
 
-
-
-@router.post("/api/accounts", response_model=AccountToken | HttpError)
+@router.post("/api/accounts", response_model=AccountToken | HttpError,)
 async def create_account(
     data: AccountIn,
     request: Request,
     response: Response,
     accounts: AccountQueries = Depends(),
 ):
+    list_accounts = accounts.get_all_accounts()
+    for acc in list_accounts:
+        if data.username == acc.username:
+            raise HTTPException(status_code=404, detail="Account with this username already exists".format(data.username))
+
     hashed_password = authenticator.hash_password(data.password)
     try:
         account = accounts.create_account(data, hashed_password)
     except DuplicateAccountError:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code= status.HTTP_400_BAD_REQUEST,
             detail="Cannot create an account with those credentials",
         )
     form = AccountForm(username=data.username, password=data.password)
