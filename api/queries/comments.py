@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional, List, Union
 from datetime import date
 from queries.pool import pool
+from fastapi import HTTPException
 
 
 class Error(BaseModel):
@@ -102,10 +103,10 @@ class CommentRepository:
 
             return self.get_comment(id)
 
-                    # return True
+
         except Exception as e:
             print(e)
-            return {"message":"Could not create comment"}
+            return Error(message = "Could not create new comment")
 
 
 
@@ -154,14 +155,15 @@ class CommentRepository:
                         """,
                         [comment_id]
                     )
-
                     row = db.fetchone()
-
-                    return self.comment_record_to_dict(row, db.description)
+                    if row != None:
+                        return self.comment_record_to_dict(row, db.description)
+                    else:
+                        raise HTTPException(status_code=404, detail="No comments found with id {}".format(comment_id))
 
         except Exception as e:
-            print(e)
-            return {"message":"Could not get comment"}
+            return Error(message = "No comments found with id {}".format(comment_id))
+
 
 
     def get_all_review_comments(self, review_id:int) -> Union[List[CommentOut], Error]:
@@ -212,11 +214,15 @@ class CommentRepository:
                     for row in rows:
                         comment = self.comment_record_to_dict(row, db.description)
                         comments.append(comment)
-                    return comments
+
+                    if comments != []:
+                        return comments
+                    else:
+                        raise HTTPException(status_code=404, detail="No comments found")
 
         except Exception as e:
             print(e)
-            return {"message":"Could not get all comments"}
+            return Error(message = "No review found for this id")
 
 
     def comment_record_to_dict(self, row, description) -> CommentOut:
