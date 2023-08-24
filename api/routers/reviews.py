@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from queries.reviews import  ReviewIn, ReviewOut, ReviewQueries, ReviewListOut
 from authenticator import authenticator
+from psycopg import errors 
 
 router = APIRouter()
 
@@ -30,8 +31,12 @@ def create_review(
     queries: ReviewQueries = Depends(),
     dict = Depends(authenticator.get_current_account_data),
 ):
-    
-    return queries.create_review(review)
+    try:
+        return queries.create_review(review)
+    except errors.CheckViolation as e:
+        raise HTTPException(status_code=400, detail="Invalid rating value. Must be between 1 and 5.")
+    except errors.ForeignKeyViolation as e:
+        raise HTTPException(status_code=400, detail="Invalid account ID or location ID.")
 
 #Delete a review
 @router.delete("/api/reviews/{id}", response_model =bool)
@@ -69,15 +74,29 @@ def update_review(
     queries: ReviewQueries = Depends(),
     dict = Depends(authenticator.get_current_account_data),
 ):
-    existing_review = queries.get_review(id)
-    if existing_review is None:
-        raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
+    try:
+        if not updated_review.location_id:
+            raise HTTPException(status_code=400, detail="location_id is a required field")
+        
+        if not updated_review.account_id:
+            raise HTTPException(status_code=400, detail="account_id is a required field")
+        
+        if not updated_review.rating:
+            raise HTTPException(status_code=400, detail="rating is a required field (1-5)")
 
-    updated_review_out = queries.update_review(id, updated_review)
-    if updated_review_out is None:
-        raise HTTPException(status_code=500, detail="Failed to update review")
+        existing_review = queries.get_review(id)
+        if existing_review is None:
+            raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
 
-    return updated_review_out
+        
+        updated_review_out = queries.update_review(id, updated_review)
+        if updated_review_out is None:
+            raise HTTPException(status_code=500, detail="Failed to update review")
+
+        return updated_review_out
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="An error occurred while updating the review")
 
 @router.get("/api/locations/{location_id}/average_rating", response_model=float)
 def get_average_rating(

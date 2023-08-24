@@ -88,7 +88,7 @@ class ReviewQueries:
                         a.first_name, a.last_name, a.date_of_birth, a.email, a.username
                         FROM reviews r
                         JOIN locations l ON r.location_id = l.id
-                        JOIN accounts a ON r.account_id = a.username
+                        JOIN accounts a ON r.account_id = a.id
                         ORDER BY r.created_on;
                         """
                     )
