@@ -5,6 +5,7 @@ import LoginForm from "./LoginForm";
 import HomePage from "./HomePage";
 import SignupForm from "./SignUpForm";
 import CommentForm from "./CommentForm";
+import Nav from "./Nav";
 
 function App() {
   // other stuff, here
@@ -16,6 +17,7 @@ function App() {
         <AuthProvider
           baseUrl={process.env.REACT_APP_API_HOST.replace(domain, "")}
         >
+          <Nav />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/account/signup" element={<SignupForm />} />
