@@ -1,19 +1,14 @@
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import LoginForm from "./LoginForm";
 import HomePage from "./HomePage";
 import SignupForm from "./SignUpForm";
-
-
+import CommentForm from "./CommentForm";
 
 function App() {
   // other stuff, here
-    const domain = /https:\/\/[^/]+/;
-    
-
-
+  const domain = /https:\/\/[^/]+/;
 
   return (
     <div className="container">
@@ -25,6 +20,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/account/signup" element={<SignupForm />} />
             <Route path="/Token" element={<LoginForm />} />
+            <Route path="/comments/new" element={<CommentForm />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
