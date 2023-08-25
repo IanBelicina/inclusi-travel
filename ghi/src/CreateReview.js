@@ -43,37 +43,64 @@ const CreateReview = () => {
   };
 
   return (
-    <div>
+    //
+    <div className="container mt-5">
       <form onSubmit={handleSubmit}>
-        <label>
-          Location ID:
+        <div className="mb-3">
+          <label htmlFor="locationId" className="form-label">
+            Location ID:
+          </label>
           <input
             type="text"
+            className="form-control"
+            id="locationId"
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
           />
-        </label>
-        <label>
-          Account ID:
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="accountId" className="form-label">
+            Account ID:
+          </label>
           <input
             type="text"
+            className="form-control"
+            id="accountId"
             value={accountId}
             onChange={(e) => setAccountId(e.target.value)}
           />
-        </label>
-        <label>
-          Rating:
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="rating" className="form-label">
+            Rating:
+          </label>
           <input
-            type="text"
+            type="number" // changed to number for better semantics
+            className="form-control"
+            id="rating"
             value={rating}
             onChange={(e) => setRating(e.target.value)}
           />
-        </label>
-        <label>
-          Body:
-          <textarea value={body} onChange={(e) => setBody(e.target.value)} />
-        </label>
-        <input type="submit" value="Submit" />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="body" className="form-label">
+            Body:
+          </label>
+          <textarea
+            className="form-control"
+            id="body"
+            rows="3" // for visual presentation
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Submit
+        </button>
       </form>
     </div>
   );
