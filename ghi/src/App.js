@@ -5,8 +5,7 @@ import LoginForm from "./LoginForm";
 import HomePage from "./HomePage";
 import SignupForm from "./SignUpForm";
 import CreateReview from "./CreateReview";
-
-
+import ReviewComments from "./ReviewComments";
 import CommentForm from "./CommentForm";
 import Nav from "./Nav";
 
@@ -27,6 +26,10 @@ function App() {
             <Route path="/Token" element={<LoginForm />} />
             <Route path="/review/form" element={<CreateReview />} />
             <Route path="/comments/new" element={<CommentForm />} />
+            <Route
+              path="/review/:reviewId/details"
+              element={<ReviewComments />}
+            />
           </Routes>
         </AuthProvider>
       </BrowserRouter>

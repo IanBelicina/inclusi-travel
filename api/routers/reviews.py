@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Optional
 from queries.reviews import  ReviewIn, ReviewOut, ReviewQueries, ReviewListOut
 from authenticator import authenticator
-from psycopg import errors 
+from psycopg import errors
 
 router = APIRouter()
 
@@ -15,13 +15,13 @@ def get_reviews(
     queries: ReviewQueries = Depends(),
     dict = Depends(authenticator.get_current_account_data),
 ):
-    
+
     reviews = queries.get_all_reviews()
     if not reviews:
         raise HTTPException(status_code=404, detail="No reviews found")
-    
+
     return{"reviews": queries.get_all_reviews()}
-    
+
 
 
 #create a reveiw
@@ -57,14 +57,14 @@ def delete_review(
 def get_review(
         id:int,
         queries: ReviewQueries = Depends(),
-        dict = Depends(authenticator.get_current_account_data),
+        # dict = Depends(authenticator.get_current_account_data),
 ):
     record = queries.get_review(id)
     if record is None:
         raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
     else:
         return record
-    
+
 
     #update review
 @router.put("/api/reviews/{id}", response_model=Optional[ReviewOut])
@@ -77,10 +77,10 @@ def update_review(
     try:
         if not updated_review.location_id:
             raise HTTPException(status_code=400, detail="location_id is a required field")
-        
+
         if not updated_review.account_id:
             raise HTTPException(status_code=400, detail="account_id is a required field")
-        
+
         if not updated_review.rating:
             raise HTTPException(status_code=400, detail="rating is a required field (1-5)")
 
@@ -88,13 +88,13 @@ def update_review(
         if existing_review is None:
             raise HTTPException(status_code=404, detail="No review found with id {}".format(id))
 
-        
+
         updated_review_out = queries.update_review(id, updated_review)
         if updated_review_out is None:
             raise HTTPException(status_code=500, detail="Failed to update review")
 
         return updated_review_out
-    
+
     except Exception as e:
         raise HTTPException(status_code=500, detail="An error occurred while updating the review")
 
