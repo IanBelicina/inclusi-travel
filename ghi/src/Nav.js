@@ -9,14 +9,25 @@ function Nav() {
           Home
         </NavLink>
       </div>
-      <div className="nav-links">
-        <NavLink to="/account/signup" activeclassname="active-link">
-          Signup
-        </NavLink>
-        <NavLink to="/Token" activeclassname="active-link">
-          Login
-        </NavLink>
-      </div>
+      <ul>
+        <div className="nav-links">
+          <NavLink to="/account/signup" activeclassname="active-link">
+            Signup
+          </NavLink>
+          <NavLink to="/Token" activeclassname="active-link">
+            Login
+          </NavLink>
+          <NavLink to="/account/signup" activeclassname="active-link">
+            Signup
+          </NavLink>
+          <NavLink to="/locations/" activeclassname="active-link">
+            Locations List
+          </NavLink>
+          <NavLink to="/locations/form/" activeclassname="active-link">
+            Locations Form
+          </NavLink>
+        </div>
+      </ul>
     </nav>
   );
 }
