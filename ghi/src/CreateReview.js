@@ -84,7 +84,7 @@ const CreateReview = () => {
                 Rating:
               </label>
               <input
-                type="number" // changed to number for better semantics
+                type="number" 
                 className="form-control"
                 id="rating"
                 value={rating}
@@ -99,7 +99,7 @@ const CreateReview = () => {
               <textarea
                 className="form-control"
                 id="body"
-                rows="3" // for visual presentation
+                rows="3" 
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
               />
