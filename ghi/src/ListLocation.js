@@ -1,11 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 
 function LocationList() {
   const [locations, setLocations] = useState([]);
   const [rating, setRating] = useState({});
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState("");
 
-  const fetchLocation = async()=> {
+  const fetchLocation = async () => {
     const url = "http://localhost:8000/api/locations/";
 
     const response = await fetch(url);
@@ -13,33 +13,34 @@ function LocationList() {
     if (response.ok) {
       const data = await response.json();
       setLocations(data.locations);
-    };
+    }
   };
-   const Rating = async () => {
-     locations.map(async (location) => {
-       const url = `http://localhost:8000/api/locations/${location.id}/average_rating`;
-       const response = await fetch(url);
-       if (response.ok) {
-         const data = await response.json();
-         let locID = location.id
-         let ratingObj = {}
-         ratingObj[locID] = data;
-         setRating((loc) => ({
-           ...loc,
-           ...ratingObj
-         }));
-       }
-     });
-   };
 
-  const handleSearch = (event) =>{
-    setSearch(event.target.value)
-  }
+  const Rating = async () => {
+    locations.map(async (location) => {
+      const url = `http://localhost:8000/api/locations/${location.id}/average_rating`;
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        let locID = location.id;
+        let ratingObj = {};
+        ratingObj[locID] = data;
+        setRating((loc) => ({
+          ...loc,
+          ...ratingObj,
+        }));
+      }
+    });
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+  };
   useEffect(() => {
     fetchLocation();
   }, []);
   useEffect(() => {
-      Rating();
+    Rating();
   }, [locations]);
 
   return (
@@ -70,7 +71,10 @@ function LocationList() {
           {locations
             .filter((location) => {
               return (
-                search === "" ||location.location_name.toLowerCase().includes(search.toLowerCase())
+                search === "" ||
+                location.location_name
+                  .toLowerCase()
+                  .includes(search.toLowerCase())
               );
             })
             .map((location) => {

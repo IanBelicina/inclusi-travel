@@ -26,7 +26,7 @@ const SignupForm = () => {
       email: email,
       username: username,
       password: password,
-      
+
     };
     console.log(accountData)
     register(accountData, `${process.env.REACT_APP_API_HOST}/api/accounts`);
@@ -127,7 +127,6 @@ const SignupForm = () => {
       </div>
     );
 };
-
 
 
 export default SignupForm;
