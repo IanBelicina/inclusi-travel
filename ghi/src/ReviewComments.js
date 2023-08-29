@@ -21,7 +21,7 @@ function ReviewComments() {
       setComments(data);
     }
   }
-  console.log(comments, "this is comments");
+  // console.log(comments, "this is comments");
 
   async function getReview() {
     const response = await fetch(
@@ -40,6 +40,23 @@ function ReviewComments() {
     }
   }
   // console.log(review, "review");
+  async function handleDeleteComment(commentId) {
+    // console.log(`Delete button clicked for comment with ID: ${commentId}`);
+    const response = await fetch(
+      `http://localhost:8000/reviews/comments/${commentId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.ok) {
+      getReviewComments();
+      console.log("comment has been deleted");
+    }
+  }
 
   useEffect(() => {
     getReviewComments();
@@ -72,6 +89,14 @@ function ReviewComments() {
                 <td>{comment.review.body}</td>
                 <td>{comment.content}</td>
                 <td>{comment.created_on}</td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             );
           })}
