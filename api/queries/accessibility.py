@@ -1,31 +1,31 @@
 import os
 from psycopg_pool import ConnectionPool
 from pydantic import BaseModel
-from datetime import date
-from queries.pool import pool
 from typing import List
 from fastapi import HTTPException
 
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
+
 class AccessibilityIn(BaseModel):
     name: str
+
 
 class AccessibilityOut(BaseModel):
     id: int
     name: str
 
+
 class AccessibilityListOut(BaseModel):
     accessibilities: list[AccessibilityOut]
+
 
 class AcessibilityQueries:
     def create_accessibility(self, data) -> AccessibilityOut:
         with pool.connection() as conn:
             with conn.cursor() as cur:
-                params = [
-                    data.name
-                ]
+                params = [data.name]
                 cur.execute(
                     """
                     SELECT id, name
@@ -35,7 +35,10 @@ class AcessibilityQueries:
                     params,
                 )
                 if cur.rowcount > 0:
-                    raise HTTPException(status_code=400, detail="The acessibility already exists")
+                    raise HTTPException(
+                        status_code=400,
+                        detail="The acessibility already exists",
+                    )
                 else:
                     cur.execute(
                         """
@@ -54,7 +57,10 @@ class AcessibilityQueries:
                 if record is not None:
                     return AccessibilityOut(**record)
                 else:
-                    raise HTTPException(status_code = 404, detail="Unable to create the accessibility")
+                    raise HTTPException(
+                        status_code=404,
+                        detail="Unable to create the accessibility",
+                    )
 
     def get_all_accessibilities(self) -> List[AccessibilityOut]:
         with pool.connection() as conn:
