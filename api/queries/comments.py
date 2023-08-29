@@ -147,7 +147,7 @@ class CommentRepository:
                         [comment_id],
                     )
                     row = db.fetchone()
-                    if row != None:
+                    if row is not None:
                         return self.comment_record_to_dict(row, db.description)
                     else:
                         raise HTTPException(
@@ -158,6 +158,7 @@ class CommentRepository:
                         )
 
         except Exception as e:
+            print(e)
             return Error(
                 message="No comments found with id {}".format(comment_id)
             )
