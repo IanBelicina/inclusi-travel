@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, Response, HTTPException
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException
 from typing import Optional
 from queries.reviews import ReviewIn, ReviewOut, ReviewQueries, ReviewListOut
 from authenticator import authenticator
@@ -30,12 +29,12 @@ def create_review(
 ):
     try:
         return queries.create_review(review)
-    except errors.CheckViolation as e:
+    except errors.CheckViolation:
         raise HTTPException(
             status_code=400,
             detail="Invalid rating value. Must be between 1 and 5.",
         )
-    except errors.ForeignKeyViolation as e:
+    except errors.ForeignKeyViolation:
         raise HTTPException(
             status_code=400, detail="Invalid account ID or location ID."
         )
@@ -111,7 +110,7 @@ def update_review(
 
         return updated_review_out
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=500,
             detail="An error occurred while updating the review",
