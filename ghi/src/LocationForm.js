@@ -2,26 +2,25 @@ import React, { useState, useEffect } from "react";
 import useToken from "@galvanize-inc/jwtdown-for-react";
 
 function LocationForm() {
-    const [name, setName] = useState("");
-    const [address, setAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [accessibilities, setaccessibilities] = useState([]);
-    const [accessibilitiesID, setaccessibilitiesID] = useState([]);
-    const [picture, setPicture] = useState("");
-    const { token } = useToken();
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [accessibilities, setaccessibilities] = useState([]);
+  const [accessibilitiesID, setaccessibilitiesID] = useState([]);
+  const [picture, setPicture] = useState("");
+  const { token } = useToken();
 
-    async function fetchAccessibility() {
-      const accessUrl = `${process.env.REACT_APP_API_HOST}/api/acessibility`;
+  async function fetchAccessibility() {
+    const accessUrl = `${process.env.REACT_APP_API_HOST}/api/acessibility`;
 
-      const response = await fetch(accessUrl);
+    const response = await fetch(accessUrl);
 
-      if (response.ok) {
-        const data = await response.json();
-        setaccessibilities(data.accessibilities);
-      }
+    if (response.ok) {
+      const data = await response.json();
+      setaccessibilities(data.accessibilities);
     }
-
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -41,11 +40,11 @@ function LocationForm() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
+    };
 
     const response = await fetch(url, fetchConfig);
-    const locationData = await response.json()
-    const newLocationId = locationData.id
+    const locationData = await response.json();
+    const newLocationId = locationData.id;
 
     if (response.ok) {
       setName("");
@@ -55,47 +54,46 @@ function LocationForm() {
       setPicture("");
     }
 
-    for(let acc of accessibilitiesID){
+    for (let acc of accessibilitiesID) {
       const accData = {
         location_id: newLocationId,
-        acessibility_id: acc
-    };
-    const url = `${process.env.REACT_APP_API_HOST}/api/locations/${newLocationId}/accessibilities/${acc}`;
-    const fetchConfigAcc = {
-      method: "post",
-      body: JSON.stringify(accData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
+        acessibility_id: acc,
+      };
+      const url = `${process.env.REACT_APP_API_HOST}/api/locations/${newLocationId}/accessibilities/${acc}`;
+      const fetchConfigAcc = {
+        method: "post",
+        body: JSON.stringify(accData),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
 
-    const locactionAccessibilityResponse = await fetch(url, fetchConfigAcc);
-    if (locactionAccessibilityResponse.ok) {
-      console.log("location",newLocationId,"accessability",acc)
+      const locactionAccessibilityResponse = await fetch(url, fetchConfigAcc);
+      if (locactionAccessibilityResponse.ok) {
+        console.log("location", newLocationId, "accessability", acc);
+      }
     }
-    }
-
   }
 
-    function handleName(event) {
-        const { value } = event.target;
-        setName(value);
-    }
+  function handleName(event) {
+    const { value } = event.target;
+    setName(value);
+  }
 
-    function handleAddress(event) {
-        const { value } = event.target;
-        setAddress(value);
-    }
+  function handleAddress(event) {
+    const { value } = event.target;
+    setAddress(value);
+  }
 
-    function handleCity(event) {
-        const { value } = event.target;
-        setCity(value);
-    }
-    function handleState(event) {
-      const { value } = event.target;
-      setState(value);
-    }
+  function handleCity(event) {
+    const { value } = event.target;
+    setCity(value);
+  }
+  function handleState(event) {
+    const { value } = event.target;
+    setState(value);
+  }
   function handlePicture(event) {
     const { value } = event.target;
     setPicture(value);
