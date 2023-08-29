@@ -13,13 +13,10 @@ class EmptyCommentRepository:
 def test_get_all_review_comments():
     review_id = 1
     app.dependency_overrides[CommentRepository] = EmptyCommentRepository
-    # ARRANGE
 
-    # ACT
     response = client.get(f"/reviews/{review_id}/comments")
 
     app.dependency_overrides = {}
-    # ASSERT
 
     api_response = response.json()
     api_response_code = response.status_code
