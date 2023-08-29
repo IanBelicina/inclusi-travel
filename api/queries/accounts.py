@@ -2,10 +2,8 @@ import os
 from psycopg_pool import ConnectionPool
 from pydantic import BaseModel, root_validator
 from datetime import date
-from queries.pool import pool
 from typing import List
 from fastapi import HTTPException
-
 
 
 pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
@@ -14,6 +12,7 @@ pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 class DuplicateAccountError(ValueError):
     pass
 
+
 class AccountIn(BaseModel):
     first_name: str
     last_name: str
@@ -21,6 +20,7 @@ class AccountIn(BaseModel):
     email: str
     username: str
     password: str
+
 
 class AccountOut(BaseModel):
     id: int
@@ -32,12 +32,16 @@ class AccountOut(BaseModel):
 
     @root_validator
     def convert_date_of_birth_to_str(cls, values):
-        if "date_of_birth" in values and isinstance(values["date_of_birth"], date):
+        if "date_of_birth" in values and isinstance(
+            values["date_of_birth"], date
+        ):
             values["date_of_birth"] = values["date_of_birth"].isoformat()
         return values
 
+
 class AccountOutWithPassword(AccountOut):
     hashed_password: str
+
 
 class AccountListOut(BaseModel):
     accounts: List[AccountOut]
@@ -62,9 +66,9 @@ class AccountQueries:
                 if results:
                     return results
                 else:
-                    raise HTTPException(status_code=404, detail = "No accounts found")
-
-
+                    raise HTTPException(
+                        status_code=404, detail="No accounts found"
+                    )
 
     def get_account(self, username) -> AccountOutWithPassword | None:
         with pool.connection() as conn:
@@ -80,19 +84,23 @@ class AccountQueries:
                 row = cur.fetchone()
                 if row is not None:
                     return AccountOutWithPassword(
-                        id = row[0],
-                        first_name = row[1],
+                        id=row[0],
+                        first_name=row[1],
                         last_name=row[2],
-                        date_of_birth = row[3],
-                        email = row[4],
-                        username = row[5],
+                        date_of_birth=row[3],
+                        email=row[4],
+                        username=row[5],
                         hashed_password=row[6],
                     )
                 else:
-                    raise HTTPException(status_code=404, detail = f"Account with {username} does not exist")
+                    raise HTTPException(
+                        status_code=404,
+                        detail=f"Account with {username} does not exist",
+                    )
 
-
-    def create_account(self, data: AccountIn, hashed_password: str) -> AccountOutWithPassword:
+    def create_account(
+        self, data: AccountIn, hashed_password: str
+    ) -> AccountOutWithPassword:
         with pool.connection() as conn:
             with conn.cursor() as cur:
                 params = [

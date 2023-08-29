@@ -11,6 +11,7 @@ import CommentForm from "./CommentForm";
 import Nav from "./Nav";
 import LocationForm from "./LocationForm";
 import LocationDetails from "./LocationDetails";
+import AccessibilityForm from "./AccessibilityForm";
 
 function App() {
   // other stuff, here
@@ -28,7 +29,10 @@ function App() {
             <Route path="/account/signup" element={<SignupForm />} />
             <Route path="/Token" element={<LoginForm />} />
             <Route path="/locations" element={<LocationList />} />
-            <Route path="/locations/:locationId"element={<LocationDetails />} />
+            <Route
+              path="/locations/:locationId"
+              element={<LocationDetails />}
+            />
             <Route path="/review/form" element={<CreateReview />} />
             <Route path="/comments/new" element={<CommentForm />} />
             <Route path="/locations/form" element={<LocationForm />} />
@@ -36,6 +40,7 @@ function App() {
               path="/review/:reviewId/details"
               element={<ReviewComments />}
             />
+            <Route path="/accessibility/form" element={<AccessibilityForm />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
