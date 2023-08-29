@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get("/api/reviews", response_model=ReviewListOut)
 def get_reviews(
     queries: ReviewQueries = Depends(),
-    dict=Depends(authenticator.get_current_account_data),
+    # dict=Depends(authenticator.get_current_account_data),
 ):
     reviews = queries.get_all_reviews()
     if not reviews:
