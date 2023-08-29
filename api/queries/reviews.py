@@ -6,13 +6,14 @@ from queries.accounts import AccountOut, AccountQueries
 
 from datetime import date
 
-class ReviewIn(BaseModel):
 
+class ReviewIn(BaseModel):
     location_id: int
     account_id: int
     rating: int
     body: str
     created_on: date
+
 
 class ReviewOut(BaseModel):
     id: int
@@ -21,6 +22,7 @@ class ReviewOut(BaseModel):
     rating: int
     body: str
     created_on: date
+
 
 class ReviewListOut(BaseModel):
     reviews: list[ReviewOut]
@@ -36,25 +38,30 @@ class ReviewQueries:
                     VALUES (%s, %s, %s, %s, %s)
                     RETURNING id, location_id, account_id, rating, body, created_on
                     """,
-                    (review.location_id, review.account_id, review.rating, review.body, review.created_on),
+                    (
+                        review.location_id,
+                        review.account_id,
+                        review.rating,
+                        review.body,
+                        review.created_on,
+                    ),
                 )
-
 
                 row = cur.fetchone()
 
-
                 row_dict = {}
-
 
                 for i, column in enumerate(cur.description):
                     column_name = column.name
                     column_value = row[i]
                     row_dict[column_name] = column_value
 
-                location_id = row_dict['location_id']
-                account_id = row_dict['account_id']
+                location_id = row_dict["location_id"]
+                account_id = row_dict["account_id"]
 
-                location_instance = LocationQueries().get_a_location(location_id)
+                location_instance = LocationQueries().get_a_location(
+                    location_id
+                )
                 accounts_list = AccountQueries().get_all_accounts()
                 # print(accounts_list)
                 account_username = None
@@ -63,26 +70,22 @@ class ReviewQueries:
                         # print("account username", account.username)
                         account_username = account.username
 
-                account_instance = AccountQueries().get_account(account_username)
+                account_instance = AccountQueries().get_account(
+                    account_username
+                )
 
-
-
-                row_dict['location_id'] = location_instance
-                row_dict['account_id'] = account_instance
-
+                row_dict["location_id"] = location_instance
+                row_dict["account_id"] = account_instance
 
                 review_out_object = ReviewOut(**row_dict)
 
-
                 return review_out_object
 
-
-
     def get_all_reviews(self) -> List[ReviewOut]:
-            with pool.connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute(
-                        """
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
                         SELECT r.id, r.location_id, r.account_id, r.rating,
                         r.body, r.created_on, l.location_name, l.address, l.city, l.state, l.updated_on, l.picture,
                         a.first_name, a.last_name, a.date_of_birth, a.email, a.username
@@ -91,41 +94,40 @@ class ReviewQueries:
                         JOIN accounts a ON r.account_id = a.id
                         ORDER BY r.created_on;
                         """
+                )
+
+                results = []
+                for row in cur.fetchall():
+                    record = {}
+                    for i, column in enumerate(cur.description):
+                        record[column.name] = row[i]
+
+                    location = LocationsOut(
+                        id=record["location_id"],
+                        address=record["address"],
+                        city=record["city"],
+                        state=record["state"],
+                        location_name=record["location_name"],
+                        updated_on=record["updated_on"],
+                        picture=record["picture"] or "",  # if it's empty
                     )
 
-                    results = []
-                    for row in cur.fetchall():
-                        record = {}
-                        for i, column in enumerate(cur.description):
-                            record[column.name] = row[i]
+                    account = AccountOut(
+                        id=record["account_id"],
+                        first_name=record["first_name"],
+                        last_name=record["last_name"],
+                        date_of_birth=record["date_of_birth"],
+                        email=record["email"],
+                        username=record["username"],
+                        # password=record['password']
+                    )
 
+                    record["location_id"] = location
+                    record["account_id"] = account
 
-                        location = LocationsOut(
-                            id=record['location_id'],
-                            address=record['address'],
-                            city=record['city'],
-                            state=record['state'],
-                            location_name=record['location_name'],
-                            updated_on=record['updated_on'],
-                            picture=record['picture'] or '', # if it's empty
-                        )
+                    results.append(ReviewOut(**record))
 
-                        account = AccountOut(
-                            id=record['account_id'],
-                            first_name=record['first_name'],
-                            last_name=record['last_name'],
-                            date_of_birth=record['date_of_birth'],
-                            email=record['email'],
-                            username=record['username'],
-                            # password=record['password']
-                        )
-
-                        record['location_id'] = location
-                        record['account_id'] = account
-
-                        results.append(ReviewOut(**record))
-
-                    return results
+                return results
 
     def delete_review(self, id) -> None:
         with pool.connection() as conn:
@@ -161,33 +163,35 @@ class ReviewQueries:
                         record[column.name] = row[i]
 
                     location = LocationsOut(
-                        id=record['location_id'],
-                        address=record['address'],
-                        city=record['city'],
-                        state=record['state'],
-                        location_name=record['location_name'],
-                        updated_on=record['updated_on'],
-                        picture=record['picture'] or '',  # if it's empty
+                        id=record["location_id"],
+                        address=record["address"],
+                        city=record["city"],
+                        state=record["state"],
+                        location_name=record["location_name"],
+                        updated_on=record["updated_on"],
+                        picture=record["picture"] or "",  # if it's empty
                     )
 
                     account = AccountOut(
-                        id=record['account_id'],
-                        first_name=record['first_name'],
-                        last_name=record['last_name'],
-                        date_of_birth=record['date_of_birth'],
-                        email=record['email'],
-                        username=record['username'],
+                        id=record["account_id"],
+                        first_name=record["first_name"],
+                        last_name=record["last_name"],
+                        date_of_birth=record["date_of_birth"],
+                        email=record["email"],
+                        username=record["username"],
                         # password=record['password']
                     )
 
-                    record['location_id'] = location
-                    record['account_id'] = account
+                    record["location_id"] = location
+                    record["account_id"] = account
 
                     return ReviewOut(**record)
                 else:
                     return None
 
-    def update_review(self, id: int, updated_review: ReviewIn) -> Optional[ReviewOut]:
+    def update_review(
+        self, id: int, updated_review: ReviewIn
+    ) -> Optional[ReviewOut]:
         with pool.getconn() as conn:
             with conn.cursor() as cur:
                 cur.execute(
@@ -197,7 +201,13 @@ class ReviewQueries:
                     WHERE id = %s
                     RETURNING id, location_id, account_id, rating, body, created_on
                     """,
-                    (updated_review.location_id, updated_review.account_id, updated_review.rating, updated_review.body, id),
+                    (
+                        updated_review.location_id,
+                        updated_review.account_id,
+                        updated_review.rating,
+                        updated_review.body,
+                        id,
+                    ),
                 )
 
                 row = cur.fetchone()
@@ -209,10 +219,12 @@ class ReviewQueries:
                         column_value = row[i]
                         row_dict[column_name] = column_value
 
-                    location_id = row_dict['location_id']
-                    account_id = row_dict['account_id']
+                    location_id = row_dict["location_id"]
+                    account_id = row_dict["account_id"]
 
-                    location_instance = LocationQueries().get_a_location(location_id)
+                    location_instance = LocationQueries().get_a_location(
+                        location_id
+                    )
 
                     accounts_list = AccountQueries().get_all_accounts()
                     # print(accounts_list)
@@ -222,13 +234,12 @@ class ReviewQueries:
                             # print("account username", account.username)
                             account_username = account.username
 
-                    account_instance = AccountQueries().get_account(account_username)
+                    account_instance = AccountQueries().get_account(
+                        account_username
+                    )
 
-
-
-
-                    row_dict['location_id'] = location_instance
-                    row_dict['account_id'] = account_instance
+                    row_dict["location_id"] = location_instance
+                    row_dict["account_id"] = account_instance
 
                     review_out_object = ReviewOut(**row_dict)
 
