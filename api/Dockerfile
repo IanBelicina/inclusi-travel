@@ -16,7 +16,7 @@ RUN python -m pip install -r requirements.txt
 
 # !! PORT env var needs to match with exposed port in caprover dashboard
 # CMD uvicorn main:app --host 0.0.0.0 --port 80
-
+COPY authenticator.py authenticator.py
 
 # If you're using a relational database and want migrations
 # to be run automatically, delete the previous CMD line and
