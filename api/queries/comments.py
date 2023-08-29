@@ -1,13 +1,13 @@
 from queries.reviews import ReviewOut
 from pydantic import BaseModel
-from typing import Optional, List, Union
+from typing import List, Union
 from datetime import date
 from queries.pool import pool
 from fastapi import HTTPException
 
 
 class Error(BaseModel):
-    message:str
+    message: str
 
 
 class CommentIn(BaseModel):
@@ -15,6 +15,7 @@ class CommentIn(BaseModel):
     review_id: int
     content: str
     created_on: date
+
 
 class CommentOut(BaseModel):
     id: int
@@ -25,13 +26,14 @@ class CommentOut(BaseModel):
 
 
 class CommentRepository:
-
-    def update_comment(self, comment_id:int, comment:CommentIn)->Union[CommentOut,Error]:
+    def update_comment(
+        self, comment_id: int, comment: CommentIn
+    ) -> Union[CommentOut, Error]:
         try:
             with pool.connection() as conn:
-                    with conn.cursor() as db:
-                        db.execute(
-                            """
+                with conn.cursor() as db:
+                    db.execute(
+                        """
                             UPDATE comments
                             SET
                                 account_id = %s
@@ -40,41 +42,36 @@ class CommentRepository:
                                 ,created_on = %s
                             WHERE id = %s
                             """,
-                            [
-                                comment.account_id,
-                                comment.review_id,
-                                comment.content,
-                                comment.created_on,
-                                comment_id
-                            ]
-                        )
+                        [
+                            comment.account_id,
+                            comment.review_id,
+                            comment.content,
+                            comment.created_on,
+                            comment_id,
+                        ],
+                    )
             return self.get_comment(comment_id)
         except Exception as e:
             print(e)
-            return {"message":"Could not update comment"}
+            return {"message": "Could not update comment"}
 
-
-
-    def delete_comment(self, comment_id:int) -> Union[None,Error]:
-
+    def delete_comment(self, comment_id: int) -> Union[None, Error]:
         try:
             with pool.connection() as conn:
-                    with conn.cursor() as db:
-                        db.execute(
-                            """
+                with conn.cursor() as db:
+                    db.execute(
+                        """
                             DELETE FROM comments
                             WHERE id = %s
                             """,
-                            [comment_id]
-                        )
-                        return True
+                        [comment_id],
+                    )
+                    return True
         except Exception as e:
             print(e)
-            return {"message":"Could not delete comment"}
+            return {"message": "Could not delete comment"}
 
-
-    def create_comment(self, comment) ->Union[None,Error]:
-
+    def create_comment(self, comment) -> Union[None, Error]:
         id = None
         try:
             with pool.connection() as conn:
@@ -94,8 +91,8 @@ class CommentRepository:
                             comment.account_id,
                             comment.review_id,
                             comment.content,
-                            comment.created_on
-                        ]
+                            comment.created_on,
+                        ],
                     )
                     row = db.fetchone()
                     id = row[0]
@@ -103,17 +100,11 @@ class CommentRepository:
 
             return self.get_comment(id)
 
-
         except Exception as e:
             print(e)
-            return Error(message = "Could not create new comment")
+            return Error(message="Could not create new comment")
 
-
-
-
-
-
-    def get_comment(self, comment_id:int) ->Union[CommentOut,Error]:
+    def get_comment(self, comment_id: int) -> Union[CommentOut, Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -153,21 +144,28 @@ class CommentRepository:
                         join locations l on r.location_id = l.id
                         where c.id =  %s
                         """,
-                        [comment_id]
+                        [comment_id],
                     )
                     row = db.fetchone()
-                    if row != None:
+                    if row is not None:
                         return self.comment_record_to_dict(row, db.description)
                     else:
-                        raise HTTPException(status_code=404, detail="No comments found with id {}".format(comment_id))
+                        raise HTTPException(
+                            status_code=404,
+                            detail="No comments found with id {}".format(
+                                comment_id
+                            ),
+                        )
 
         except Exception as e:
-            return Error(message = "No comments found with id {}".format(comment_id))
+            print(e)
+            return Error(
+                message="No comments found with id {}".format(comment_id)
+            )
 
-
-
-    def get_all_review_comments(self, review_id:int) -> Union[List[CommentOut], Error]:
-
+    def get_all_review_comments(
+        self, review_id: int
+    ) -> Union[List[CommentOut], Error]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -207,26 +205,28 @@ class CommentRepository:
                         join locations l on r.location_id = l.id
                         where review_id =  %s
                         """,
-                        [review_id]
+                        [review_id],
                     )
                     comments = []
                     rows = db.fetchall()
                     for row in rows:
-                        comment = self.comment_record_to_dict(row, db.description)
+                        comment = self.comment_record_to_dict(
+                            row, db.description
+                        )
                         comments.append(comment)
 
                     if comments != []:
                         return comments
                     else:
-                        raise HTTPException(status_code=404, detail="No comments found")
+                        raise HTTPException(
+                            status_code=404, detail="No comments found"
+                        )
 
         except Exception as e:
             print(e)
-            return Error(message = "No review found for this id")
-
+            return Error(message="No review found for this id")
 
     def comment_record_to_dict(self, row, description) -> CommentOut:
-
         comment = None
         if row is not None:
             comment = {}
@@ -234,7 +234,7 @@ class CommentRepository:
                 "comment_id",
                 "account_id_comment",
                 "content",
-                "created_on_comment"
+                "created_on_comment",
             ]
             for i, column in enumerate(description):
                 if column.name in comment_fields:
@@ -249,7 +249,7 @@ class CommentRepository:
                 "location_id",
                 "rating",
                 "body",
-                "created_on_review"
+                "created_on_review",
             ]
             for i, column in enumerate(description):
                 if column.name in review_fields:
@@ -258,7 +258,7 @@ class CommentRepository:
 
             review["created_on"] = review["created_on_review"]
 
-            account={}
+            account = {}
             account_fields = [
                 "account_id",
                 "first_name",
@@ -266,7 +266,7 @@ class CommentRepository:
                 "date_of_birth",
                 "email",
                 "username",
-                "password"
+                "password",
             ]
             for i, column in enumerate(description):
                 if column.name in account_fields:
@@ -281,13 +281,13 @@ class CommentRepository:
                 "state",
                 "location_name",
                 "picture",
-                "updated_on"
+                "updated_on",
             ]
             for i, column in enumerate(description):
                 if column.name in location_fields:
                     location[column.name] = row[i]
             location["id"] = location["location_id_location"]
-            location["picture"] = location["picture"] or ''
+            location["picture"] = location["picture"] or ""
 
             review["location_id"] = location
             review["account_id"] = account
