@@ -11,8 +11,6 @@ const LoginForm = () => {
     login(username, password);
     e.target.reset();
   };
-
-  
   
 
   return (
