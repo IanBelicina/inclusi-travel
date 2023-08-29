@@ -6,6 +6,11 @@
 .App {
   text-align: center;
 }
+.container-fluid a {
+  color: black; 
+  text-decoration: none;
+  padding: 10px;
+}
 
 .App-header {
   background-color: #282c34;
@@ -16,4 +21,9 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.logo-image {
+    height: 70px;
+    width: auto;  
 }

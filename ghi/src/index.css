@@ -7,8 +7,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -moz-osx-font-smoothing: grayscale;
   /* added background-image for testing */
+
   background-image: url('/public/cool-background.png'); 
   background-size: cover; 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  
   
 }
 
@@ -16,4 +20,5 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
 
