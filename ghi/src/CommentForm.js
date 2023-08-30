@@ -1,6 +1,7 @@
 import { useState } from "react";
-import useToken from "@galvanize-inc/jwtdown-for-react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
 
 const CommentForm = () => {
   const [accountId, setAccountId] = useState("");
@@ -8,7 +9,7 @@ const CommentForm = () => {
   const [content, setContent] = useState("");
   const [createdOn, setCreatedOn] = useState("");
   const navigate = useNavigate();
-  const { token } = useToken();
+  const { token } = useContext(AuthContext);
 
   const handleCommentCreation = async (e) => {
     e.preventDefault();
