@@ -66,9 +66,7 @@ class AccountQueries:
                 if results:
                     return results
                 else:
-                    raise HTTPException(
-                        status_code=404, detail="No accounts found"
-                    )
+                    return None
 
     def get_account(self, username) -> AccountOutWithPassword | None:
         with pool.connection() as conn:

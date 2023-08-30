@@ -65,7 +65,10 @@ def get_account(
 
 @router.get("/api/accounts", response_model=AccountListOut)
 def get_accounts(queries: AccountQueries = Depends()):
-    return {"accounts": queries.get_all_accounts()}
+    if queries.get_all_accounts() is None:
+        raise HTTPException(status_code=404, detail="No accounts found")
+    else:
+        return {"accounts": queries.get_all_accounts()}
 
 
 @router.post(
@@ -79,12 +82,15 @@ async def create_account(
     accounts: AccountQueries = Depends(),
 ):
     list_accounts = accounts.get_all_accounts()
-    for acc in list_accounts:
-        if data.username == acc.username:
-            raise HTTPException(
-                status_code=404,
-                detail="Account with this username already exists",
-            )
+    if list_accounts is None:
+        pass
+    else:
+        for acc in list_accounts:
+            if data.username == acc.username:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Account with this username already exists",
+                )
 
     hashed_password = authenticator.hash_password(data.password)
     try:
