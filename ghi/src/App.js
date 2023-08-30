@@ -15,14 +15,12 @@ import AccessibilityForm from "./AccessibilityForm";
 
 function App() {
   // other stuff, here
-  const domain = /https:\/\/[^/]+/;
+  // const domain = /https:\/\/[^/]+/;
 
   return (
     <div className="container">
-      <BrowserRouter>
-        <AuthProvider
-          baseUrl={process.env.REACT_APP_API_HOST.replace(domain, "")}
-        >
+      <BrowserRouter baseUrl={process.env.PUBLIC_URL}>
+        <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
           <Nav />
           <Routes>
             <Route path="/" element={<HomePage />} />
