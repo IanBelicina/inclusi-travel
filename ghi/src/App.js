@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="container">
-      <BrowserRouter>
+      <BrowserRouter baseUrl={process.env.PUBLIC_URL}>
         <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
           <Nav />
           <Routes>
