@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import useToken from "@galvanize-inc/jwtdown-for-react";
+import { useContext } from "react";
+import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
 
 function AccessibilityForm() {
   const [name, setName] = useState("");
-  const { token } = useToken();
+  const { token } = useContext(AuthContext);
 
   const handleNameChange = (event) => {
     const value = event.target.value;

@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import LogoutButton from "./Logout";
 
 
 function Nav() {
@@ -66,9 +67,9 @@ function Nav() {
                 Add a Comment
               </NavLink>
             </li>
-            
-
-
+            <li className="nav-item">
+              <LogoutButton />
+            </li>
           </ul>
         </div>
       </div>
