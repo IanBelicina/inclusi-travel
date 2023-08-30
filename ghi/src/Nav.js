@@ -1,10 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
-import useAuth  from "@galvanize-inc/jwtdown-for-react";
+
 
 function Nav() {
-  const auth = useAuth();
+  
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
@@ -60,22 +59,16 @@ function Nav() {
                 Create a Review
               </NavLink>
             </li>
-<<<<<<< HEAD
 
-            {auth.token && (
-              <li className="nav-item">
-                <LogoutButton />
-              </li>
-            )}
 
-            {/* <li className="nav-item">
-=======
             <li className="nav-item">
->>>>>>> main
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
             </li>
+            
+
+
           </ul>
         </div>
       </div>
