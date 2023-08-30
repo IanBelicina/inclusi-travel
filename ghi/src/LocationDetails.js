@@ -41,11 +41,15 @@ function LocationDetails() {
       },
     };
     const locactionDelete = await fetch(url, fetchConfig);
+    if (locactionDelete.ok) {
+      setLocations({});
+    }
   }
 
   useEffect(() => {
     fetchLocation();
     fetchAccessibilities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
