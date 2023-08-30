@@ -56,12 +56,11 @@ function Nav() {
                 Create a Review
               </NavLink>
             </li>
-
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
-            </li> */}
+            </li>
           </ul>
         </div>
       </div>

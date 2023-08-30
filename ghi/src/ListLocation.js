@@ -6,7 +6,7 @@ function LocationList() {
   const [search, setSearch] = useState("");
 
   async function fetchLocation() {
-    const url = "http://localhost:8000/api/locations/";
+    const url = `${process.env.REACT_APP_API_HOST}/api/locations/`;
 
     const response = await fetch(url);
 
@@ -14,11 +14,11 @@ function LocationList() {
       const data = await response.json();
       setLocations(data.locations);
     }
-  };
+  }
 
-  async function Rating(){
+  async function Rating() {
     locations.map(async (location) => {
-      const url = `http://localhost:8000/api/locations/${location.id}/average_rating`;
+      const url = `${process.env.REACT_APP_API_HOST}/api/locations/${location.id}/average_rating`;
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
@@ -31,7 +31,7 @@ function LocationList() {
         }));
       }
     });
-  };
+  }
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };

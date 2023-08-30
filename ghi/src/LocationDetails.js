@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import useToken from "@galvanize-inc/jwtdown-for-react";
+import { useAuthContext } from "@galvanize-inc/jwtdown-for-react";
 function LocationDetails() {
   const [location, setLocations] = useState({});
   const [accessibilities, setaccessibilities] = useState([]);
-  const { token } = useToken();
+  const { token } = useAuthContext();
   const { locationId } = useParams();
 
   async function fetchLocation() {

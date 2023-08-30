@@ -10,7 +10,7 @@ const CreateReview = () => {
   const [body, setBody] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { token }  = useContext(AuthContext); 
+  const { token }  = useContext(AuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,14 +24,16 @@ const CreateReview = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/api/reviews", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(review),
-      });
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/api/reviews`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(review),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -84,7 +86,7 @@ const CreateReview = () => {
                 Rating:
               </label>
               <input
-                type="number" 
+                type="number"
                 className="form-control"
                 id="rating"
                 value={rating}
@@ -99,7 +101,7 @@ const CreateReview = () => {
               <textarea
                 className="form-control"
                 id="body"
-                rows="3" 
+                rows="3"
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
               />

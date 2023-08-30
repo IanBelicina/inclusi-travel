@@ -14,7 +14,7 @@ function ReviewComments() {
 
   async function getReviewComments() {
     const response = await fetch(
-      `http://localhost:8000/reviews/${reviewIdInt}/comments`
+      `${process.env.REACT_APP_API_HOST}/reviews/${reviewIdInt}/comments`
     );
     if (response.ok) {
       const data = await response.json();
@@ -25,7 +25,7 @@ function ReviewComments() {
 
   async function getReview() {
     const response = await fetch(
-      `http://localhost:8000/api/reviews/${reviewIdInt}`,
+      `${process.env.REACT_APP_API_HOST}/api/reviews/${reviewIdInt}`,
       {
         method: "GET",
         headers: {
