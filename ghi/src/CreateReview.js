@@ -1,16 +1,39 @@
 import { useContext } from "react";
 import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 
 const CreateReview = () => {
   const [locationId, setLocationId] = useState("");
+  const [locations, setLocations] = useState([]);
   const [accountId, setAccountId] = useState("");
   const [rating, setRating] = useState("");
   const [body, setBody] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { token }  = useContext(AuthContext);
+
+    useEffect(() => {
+      // Fetch locations when component mounts
+      const fetchLocations = async () => {
+        try {
+          const response = await fetch("http://localhost:8000/api/locations", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setLocations(data.locations);
+        } catch (error) {
+          console.error("There was an error fetching locations!", error);
+        }
+      };
+
+      fetchLocations();
+    }, [token]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -56,7 +79,7 @@ const CreateReview = () => {
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="locationId" className="form-label">
+              {/* <label htmlFor="locationId" className="form-label">
                 Location ID:
               </label>
               <input
@@ -65,7 +88,25 @@ const CreateReview = () => {
                 id="locationId"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-              />
+              /> */}
+              <label htmlFor="locationId" className="form-label">
+                Location:
+              </label>
+              <select
+                className="form-control"
+                id="locationId"
+                value={locationId}
+                onChange={(e) => setLocationId(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select a location
+                </option>
+                {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.location_name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="mb-3">
