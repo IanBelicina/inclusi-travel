@@ -5,7 +5,7 @@ function LocationList() {
   const [rating, setRating] = useState({});
   const [search, setSearch] = useState("");
 
-  const fetchLocation = async () => {
+  async function fetchLocation() {
     const url = "http://localhost:8000/api/locations/";
 
     const response = await fetch(url);
@@ -16,7 +16,7 @@ function LocationList() {
     }
   };
 
-  const Rating = async () => {
+  async function Rating(){
     locations.map(async (location) => {
       const url = `http://localhost:8000/api/locations/${location.id}/average_rating`;
       const response = await fetch(url);
@@ -32,7 +32,6 @@ function LocationList() {
       }
     });
   };
-
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
@@ -41,6 +40,7 @@ function LocationList() {
   }, []);
   useEffect(() => {
     Rating();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locations]);
 
   return (

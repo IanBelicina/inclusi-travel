@@ -44,6 +44,7 @@ function ReviewComments() {
   useEffect(() => {
     getReviewComments();
     getReview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
