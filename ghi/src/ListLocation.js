@@ -81,7 +81,9 @@ function LocationList() {
               return (
                 <tr key={location.id}>
                   <td>
-                    <a href={`/locations/${location.id}`}>
+                    <a
+                      href={`${process.env.PUBLIC_URL}/locations/${location.id}`}
+                    >
                       {location.location_name}
                     </a>
                   </td>
