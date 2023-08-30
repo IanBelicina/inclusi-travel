@@ -2,15 +2,31 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
+
 function ReviewComments() {
   const { token } = useContext(AuthContext);
   const { reviewId } = useParams();
   const [comments, setComments] = useState([]);
   const [review, setReview] = useState([]);
-  // const [review, setReview] = useState(null);
   const reviewIdInt = parseInt(reviewId, 10);
+  const [accountId, setAccountId] = useState("");
+  const [content, setContent] = useState("");
 
   // console.log(token, "Token");
+
+  async function getUserData() {
+    const response = await fetch(`http://localhost:8000/token`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data, "this is data");
+    }
+  }
 
   async function getReviewComments() {
     const response = await fetch(
@@ -41,7 +57,6 @@ function ReviewComments() {
   }
   // console.log(review, "review");
   async function handleDeleteComment(commentId) {
-    // console.log(`Delete button clicked for comment with ID: ${commentId}`);
     const response = await fetch(
       `http://localhost:8000/reviews/comments/${commentId}`,
       {
@@ -54,13 +69,44 @@ function ReviewComments() {
     );
     if (response.ok) {
       getReviewComments();
-      console.log("comment has been deleted");
+      // console.log("comment has been deleted");
     }
   }
+
+  const handleCommentCreation = async (e) => {
+    e.preventDefault();
+
+    const commentData = {};
+
+    commentData.account_id = accountId;
+    commentData.review_id = reviewId;
+    commentData.content = content;
+
+    commentData.created_on = new Date().toISOString().slice(0, 10);
+    // console.log(commentData, "comment data object");
+
+    const url = `${process.env.REACT_APP_API_HOST}/reviews/comments`;
+    const fetchConfig = {
+      method: "post",
+      body: JSON.stringify(commentData),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await fetch(url, fetchConfig);
+
+    if (response.ok) {
+      // console.log(response, "Response");
+      e.target.reset();
+      getReviewComments();
+    }
+  };
 
   useEffect(() => {
     getReviewComments();
     getReview();
+    getUserData();
   }, []);
 
   return (
@@ -73,7 +119,6 @@ function ReviewComments() {
         </div>
       </div>
 
-      {/* <p>This is a review comments page</p> */}
       <table className="table table-striped">
         <thead>
           <tr>
@@ -102,6 +147,44 @@ function ReviewComments() {
           })}
         </tbody>
       </table>
+      <div className="card text-bg-light mb-3">
+        <h5 className="card-header">New Comment</h5>
+        <div className="card-body">
+          <form onSubmit={(e) => handleCommentCreation(e)}>
+            <div className="mb-3">
+              <label className="form-label">Account ID</label>
+              <input
+                name="accountid"
+                type="number"
+                className="form-control"
+                onChange={(e) => {
+                  setAccountId(e.target.value);
+                }}
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Content</label>
+              <input
+                name="content"
+                type="text"
+                className="form-control"
+                onChange={(e) => {
+                  setContent(e.target.value);
+                }}
+              />
+            </div>
+
+            <div>
+              <input
+                className="btn btn-primary"
+                type="submit"
+                value="Create Comment"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
     </>
   );
 }
