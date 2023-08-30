@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import LogoutButton from "./Logout";
 
 function Nav() {
   return (
@@ -60,6 +61,9 @@ function Nav() {
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
+            </li>
+            <li className="nav-item">
+              <LogoutButton />
             </li>
           </ul>
         </div>
