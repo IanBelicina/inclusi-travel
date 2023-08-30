@@ -13,14 +13,16 @@ import LocationForm from "./LocationForm";
 import LocationDetails from "./LocationDetails";
 import AccessibilityForm from "./AccessibilityForm";
 
-
 function App() {
   // other stuff, here
-  // const domain = /https:\/\/[^/]+/;
-
+  const domain = /https:\/\/[^/]+/;
+  const basename = process.env.PUBLIC_URL.replace(
+    domain,
+    "module3-project-gamma"
+  );
   return (
     <div className="container">
-      <BrowserRouter baseUrl={process.env.PUBLIC_URL}>
+      <BrowserRouter basename={basename}>
         <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
           <Nav />
           <Routes>
@@ -40,7 +42,6 @@ function App() {
               element={<ReviewComments />}
             />
             <Route path="/accessibility/form" element={<AccessibilityForm />} />
-            
           </Routes>
         </AuthProvider>
       </BrowserRouter>
