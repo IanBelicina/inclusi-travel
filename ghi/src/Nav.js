@@ -2,7 +2,10 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import LogoutButton from "./Logout";
 
+
 function Nav() {
+  
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container-fluid">
@@ -57,6 +60,8 @@ function Nav() {
                 Create a Review
               </NavLink>
             </li>
+
+
             <li className="nav-item">
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
