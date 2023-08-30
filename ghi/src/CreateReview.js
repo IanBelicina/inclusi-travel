@@ -11,7 +11,7 @@ const CreateReview = () => {
   const [body, setBody] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { token }  = useContext(AuthContext); 
+  const { token }  = useContext(AuthContext);
 
     useEffect(() => {
       // Fetch locations when component mounts
@@ -47,14 +47,16 @@ const CreateReview = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/api/reviews", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(review),
-      });
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/api/reviews`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(review),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

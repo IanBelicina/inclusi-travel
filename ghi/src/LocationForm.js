@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import useToken from "@galvanize-inc/jwtdown-for-react";
+import { useAuthContext } from "@galvanize-inc/jwtdown-for-react";
 
 function LocationForm() {
   const [name, setName] = useState("");
@@ -7,9 +7,9 @@ function LocationForm() {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [accessibilities, setaccessibilities] = useState([]);
-  const [accessibilitiesID, setaccessibilitiesID] = useState([]);
+  const [accessibilitiesID, setAccessibilitiesID] = useState([]);
   const [picture, setPicture] = useState("");
-  const { token } = useToken();
+  const { token } = useAuthContext();
 
   async function fetchAccessibility() {
     const accessUrl = `${process.env.REACT_APP_API_HOST}/api/acessibility`;
@@ -101,7 +101,7 @@ function LocationForm() {
 
   function handleAccessbility(event) {
     const { value } = event.target;
-    accessibilitiesID.push(value);
+    setAccessibilitiesID((prev) => [...prev, value]);
   }
 
   useEffect(() => {

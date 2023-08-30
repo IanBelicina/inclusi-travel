@@ -60,6 +60,7 @@ function Nav() {
                 Create a Review
               </NavLink>
             </li>
+<<<<<<< HEAD
 
             {auth.token && (
               <li className="nav-item">
@@ -68,10 +69,13 @@ function Nav() {
             )}
 
             {/* <li className="nav-item">
+=======
+            <li className="nav-item">
+>>>>>>> main
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
-            </li> */}
+            </li>
           </ul>
         </div>
       </div>
