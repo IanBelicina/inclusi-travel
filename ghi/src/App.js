@@ -12,6 +12,7 @@ import Nav from "./Nav";
 import LocationForm from "./LocationForm";
 import LocationDetails from "./LocationDetails";
 import AccessibilityForm from "./AccessibilityForm";
+import LogoutButton from "./LogoutButton";
 
 function App() {
   // other stuff, here
@@ -41,6 +42,7 @@ function App() {
               element={<ReviewComments />}
             />
             <Route path="/accessibility/form" element={<AccessibilityForm />} />
+            
           </Routes>
         </AuthProvider>
       </BrowserRouter>
