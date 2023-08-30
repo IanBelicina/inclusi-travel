@@ -7,7 +7,7 @@ function LocationForm() {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [accessibilities, setaccessibilities] = useState([]);
-  const [accessibilitiesID, setaccessibilitiesID] = useState([]);
+  const [accessibilitiesID, setAccessibilitiesID] = useState([]);
   const [picture, setPicture] = useState("");
   const { token } = useToken();
 
@@ -101,7 +101,7 @@ function LocationForm() {
 
   function handleAccessbility(event) {
     const { value } = event.target;
-    accessibilitiesID.push(value);
+    setAccessibilitiesID(prev => [...prev, value]);
   }
 
   useEffect(() => {

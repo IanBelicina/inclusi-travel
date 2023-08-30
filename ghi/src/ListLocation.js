@@ -32,7 +32,6 @@ function LocationList() {
       }
     });
   };
-  console.log('gi')
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
