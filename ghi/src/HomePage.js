@@ -3,6 +3,7 @@ import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
 import { Modal, Button } from "react-bootstrap";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
+import BootstrapCarouselComponent from "./BootstrapCarouselComponent";
 
 const HomePage = () => {
   const authContext = useContext(AuthContext);
@@ -31,8 +32,12 @@ const HomePage = () => {
   if (!authContext.token) {
     return (
       <div>
-        <h1 className="travel-with-confidence">Travel With Confidence</h1>
-        <p></p>
+        
+        <div>
+          
+          <BootstrapCarouselComponent />
+        </div>
+
         <Modal
           show={showModal}
           onHide={handleCloseModal}
@@ -59,7 +64,8 @@ const HomePage = () => {
 
   return (
     <div>
-      <h1 className="travel-with-confidence">Travel With Confidence</h1>
+      
+      <BootstrapCarouselComponent />
     </div>
   );
 };
