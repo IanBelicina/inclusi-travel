@@ -1,12 +1,9 @@
 import os
-from psycopg_pool import ConnectionPool
+from queries.pool import pool
 from pydantic import BaseModel, root_validator
 from datetime import date
 from typing import List
 from fastapi import HTTPException
-
-
-pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
 
 class DuplicateAccountError(ValueError):

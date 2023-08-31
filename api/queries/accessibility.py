@@ -1,11 +1,8 @@
 import os
-from psycopg_pool import ConnectionPool
 from pydantic import BaseModel
 from typing import List
 from fastapi import HTTPException
-
-
-pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
+from queries.pool import pool
 
 
 class AccessibilityIn(BaseModel):
