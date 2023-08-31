@@ -1,4 +1,3 @@
-import os
 from queries.pool import pool
 from pydantic import BaseModel, root_validator
 from datetime import date

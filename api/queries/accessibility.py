@@ -1,4 +1,3 @@
-import os
 from pydantic import BaseModel
 from typing import List
 from fastapi import HTTPException
