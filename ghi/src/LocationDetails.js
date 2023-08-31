@@ -54,22 +54,41 @@ function LocationDetails() {
 
   return (
     <>
-      <div>
+      <div className="card mb-4">
+        <div className="card-header">{location.location_name}</div>
+        <div className="card-body">
+          <h5 className="card-title">
+            {location.address} {location.city}, {location.state}
+          </h5>
+          <div>
+            {accessibilities.map((accessibility) => (
+              <div key={accessibility.id}>
+                <p>accessibility feature: {accessibility.name}</p>
+              </div>
+            ))}
+          </div>
+          <button onClick={handleDelete} className="btn btn-primary">
+            delete
+          </button>
+          {/* <p className="card-text">Author: {review.account_id.username}</p> */}
+        </div>
+      </div>
+      {/* <div>
         <p>{location.location_name}</p>
         <p>{location.address}</p>
         <p>{location.city}</p>
         <p>{location.state}</p>
-      </div>
-      <div>
+      </div> */}
+      {/* <div>
         {accessibilities.map((accessibility) => (
           <div key={accessibility.id}>
             <p>{accessibility.name}</p>
           </div>
         ))}
-      </div>
-      <button onClick={handleDelete} className="btn btn-primary">
+      </div> */}
+      {/* <button onClick={handleDelete} className="btn btn-primary">
         delete
-      </button>
+      </button> */}
     </>
   );
 }
