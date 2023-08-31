@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import LogoutButton from "./Logout";
 
-
 function Nav() {
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoggedIn(!isLoggedIn);
+  };
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
@@ -25,17 +28,25 @@ function Nav() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <NavLink to="/account/signup" activeclassname="active-link">
-                Signup
-              </NavLink>
-            </li>
+            {!isLoggedIn && (
+              <>
+                <li className="nav-item">
+                  <NavLink to="/account/signup" activeclassname="active-link">
+                    Signup
+                  </NavLink>
+                </li>
 
-            <li className="nav-item">
-              <NavLink to="/Token" activeclassname="active-link">
-                Login
-              </NavLink>
-            </li>
+                <li className="nav-item">
+                  <NavLink
+                    to="/Token"
+                    activeclassname="active-link"
+                    onClick={handleLogin}
+                  >
+                    Login
+                  </NavLink>
+                </li>
+              </>
+            )}
 
             <li className="nav-item">
               <NavLink to="/locations/" activeclassname="active-link">
@@ -61,15 +72,16 @@ function Nav() {
               </NavLink>
             </li>
 
-
             <li className="nav-item">
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
             </li>
-            <li className="nav-item">
-              <LogoutButton />
-            </li>
+            {isLoggedIn && (
+              <li className="nav-item">
+                <LogoutButton isLoggedin={isLoggedIn} onClick={handleLogin} />
+              </li>
+            )}
           </ul>
         </div>
       </div>

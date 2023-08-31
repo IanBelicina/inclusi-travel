@@ -12,19 +12,19 @@ import Nav from "./Nav";
 import LocationForm from "./LocationForm";
 import LocationDetails from "./LocationDetails";
 import AccessibilityForm from "./AccessibilityForm";
+import LogoutButton from "./Logout";
 
 function App() {
   // other stuff, here
   const domain = /https:\/\/[^/]+/;
-  const basename = process.env.PUBLIC_URL.replace(
-    domain,
-    ""
-  );
+  const basename = process.env.PUBLIC_URL.replace(domain, "");
+
   return (
     <div className="container">
       <BrowserRouter basename={basename}>
         <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
           <Nav />
+
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/account/signup" element={<SignupForm />} />
