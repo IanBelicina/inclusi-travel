@@ -30,7 +30,7 @@ class ReviewListOut(BaseModel):
 
 class ReviewQueries:
     def create_review(self, review: ReviewIn) -> ReviewOut:
-        with pool.getconn() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
@@ -192,7 +192,7 @@ class ReviewQueries:
     def update_review(
         self, id: int, updated_review: ReviewIn
     ) -> Optional[ReviewOut]:
-        with pool.getconn() as conn:
+        with pool.connection() as conn:
             with conn.cursor() as cur:
                 cur.execute(
                     """
