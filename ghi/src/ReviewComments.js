@@ -126,6 +126,7 @@ function ReviewComments() {
             <th>Review</th>
             <th>Comment</th>
             <th>Created On</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody>
