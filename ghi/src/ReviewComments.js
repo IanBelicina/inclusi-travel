@@ -11,22 +11,9 @@ function ReviewComments() {
   const reviewIdInt = parseInt(reviewId, 10);
   const [accountId, setAccountId] = useState("");
   const [content, setContent] = useState("");
+  const [userData, setUserData] = useState({});
 
   // console.log(token, "Token");
-
-  async function getUserData() {
-    const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data, "this is data");
-    }
-  }
 
   async function getReviewComments() {
     const response = await fetch(
@@ -102,6 +89,25 @@ function ReviewComments() {
       getReviewComments();
     }
   };
+
+  async function getUserData() {
+    const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      // console.log(data, "this is data");
+      setUserData(data);
+    }
+  }
+
+  console.log(userData, "this is userData state");
+  // console.log(userData.account.id, "this is the account id");
 
   useEffect(() => {
     getReviewComments();
