@@ -1,12 +1,9 @@
-import os
-from psycopg_pool import ConnectionPool
+from queries.pool import pool
 from typing import List
 from pydantic import BaseModel
 from datetime import date
 from typing import Optional
 from queries.accessibility import AccessibilityOut
-
-pool = ConnectionPool(conninfo=os.environ["DATABASE_URL"])
 
 
 class LocationsIn(BaseModel):
