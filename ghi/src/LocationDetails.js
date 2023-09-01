@@ -9,7 +9,7 @@ function LocationDetails() {
   const { locationId } = useParams();
 
   async function fetchLocation() {
-    console.log(locationId);
+    // console.log(locationId);
     const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}`;
 
     const response = await fetch(url);
@@ -21,7 +21,7 @@ function LocationDetails() {
   }
 
   async function fetchAccessibilities() {
-    console.log(locationId);
+    // console.log(locationId);
     const accessabilityUrl = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}/accessibilities`;
 
     const response = await fetch(accessabilityUrl);

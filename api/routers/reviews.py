@@ -17,7 +17,7 @@ def get_reviews(
     if not reviews:
         raise HTTPException(status_code=404, detail="No reviews found")
 
-    return {"reviews": queries.get_all_reviews()}
+    return {"reviews": reviews}
 
 
 # create a reveiw
