@@ -51,7 +51,7 @@ const CreateReview = () => {
       }
     }
     getUserData();
-  }, []);
+  }, [token]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
