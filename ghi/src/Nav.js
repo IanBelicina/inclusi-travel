@@ -1,10 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import LogoutButton from "./Logout";
-
+import useToken from "@galvanize-inc/jwtdown-for-react";
 
 function Nav() {
-  
+  const { token } = useToken();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark">
@@ -25,56 +25,54 @@ function Nav() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <NavLink to="/account/signup" activeclassname="active-link">
-                Signup
-              </NavLink>
-            </li>
-
-            <li className="nav-item">
-              <NavLink to="/Token" activeclassname="active-link">
-                Login
-              </NavLink>
-            </li>
-
+            {!token && (
+              <li className="nav-item">
+                <NavLink to="/account/signup" activeclassname="active-link">
+                  Signup
+                </NavLink>
+              </li>
+            )}
+            {!token && (
+              <li className="nav-item">
+                <NavLink to="/Token" activeclassname="active-link">
+                  Login
+                </NavLink>
+              </li>
+            )}
             <li className="nav-item">
               <NavLink to="/locations/" activeclassname="active-link">
                 Locations List
               </NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink to="/locations/form/" activeclassname="active-link">
                 Locations Form
               </NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink to="/accessibility/form/" activeclassname="active-link">
                 Add an Accessibility
               </NavLink>
             </li>
-
             <li className="nav-item">
               <NavLink to="/review/form/" activeclassname="active-link">
                 Create a Review
               </NavLink>
             </li>
-
-
             <li className="nav-item">
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
             </li>
-            <li className="nav-item">
-              <LogoutButton />
-            </li>
+            {token && (
+              <li className="nav-item">
+                <LogoutButton />
+              </li>
+            )}
           </ul>
         </div>
       </div>
     </nav>
   );
 }
-
 export default Nav;
