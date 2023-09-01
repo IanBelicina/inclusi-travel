@@ -34,25 +34,24 @@ const CreateReview = () => {
   }, []);
 
   useEffect(() => {
+    async function getUserData() {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+
+        setUserAccountId(data.account.id);
+        console.log(data.account.id);
+      }
+    }
     getUserData();
   }, []);
-
-  async function getUserData() {
-    const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-
-      setUserAccountId(data.account.id);
-      console.log(data.account.id);
-    }
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
