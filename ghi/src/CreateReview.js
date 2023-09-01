@@ -50,6 +50,7 @@ const CreateReview = () => {
       const data = await response.json();
 
       setUserAccountId(data.account.id);
+      console.log(data.account.id);
     }
   }
 
