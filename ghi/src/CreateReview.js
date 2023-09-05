@@ -46,8 +46,8 @@ const CreateReview = () => {
       if (response.ok) {
         const data = await response.json();
 
-        setUserAccountId(data.account.id);
-        console.log(data.account.id);
+        setUserAccountId(data);
+        // console.log(data.account.id);
       }
     }
     getUserData();
@@ -58,7 +58,8 @@ const CreateReview = () => {
 
     const review = {
       location_id: locationId,
-      account_id: userAccountId,
+      // account_id: userAccountId,
+      account_id: userAccountId.account.id,
       rating: rating,
       body: body,
       created_on: new Date().toISOString().slice(0, 10),
