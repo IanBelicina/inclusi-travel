@@ -1,22 +1,64 @@
 import { useContext } from "react";
 import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CreateReview = () => {
+  const [locations, setLocations] = useState([]);
   const [locationId, setLocationId] = useState("");
-  const [accountId, setAccountId] = useState("");
+  const [userAccountId, setUserAccountId] = useState(null);
   const [rating, setRating] = useState("");
   const [body, setBody] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { token } = useContext(AuthContext);
 
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_HOST}/api/locations`
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setLocations(data.locations);
+      } catch (error) {
+        console.error("There was an error fetching locations!", error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
+  useEffect(() => {
+    async function getUserData() {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+
+        setUserAccountId(data.account.id);
+        console.log(data.account.id);
+      }
+    }
+    getUserData();
+  }, [token]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const review = {
       location_id: locationId,
-      account_id: accountId,
+      account_id: userAccountId,
       rating: rating,
       body: body,
       created_on: new Date().toISOString().slice(0, 10),
@@ -57,41 +99,40 @@ const CreateReview = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="locationId" className="form-label">
-                Location ID:
+                Location:
               </label>
-              <input
-                type="text"
+              <select
                 className="form-control"
                 id="locationId"
                 value={locationId}
                 onChange={(e) => setLocationId(e.target.value)}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="accountId" className="form-label">
-                Account ID:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="accountId"
-                value={accountId}
-                onChange={(e) => setAccountId(e.target.value)}
-              />
+              >
+                <option value="">Select a location</option>
+                {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.location_name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="mb-3">
               <label htmlFor="rating" className="form-label">
                 Rating:
               </label>
-              <input
-                type="number"
+              <select
                 className="form-control"
                 id="rating"
                 value={rating}
                 onChange={(e) => setRating(e.target.value)}
-              />
+              >
+                <option value="">Select a rating</option>
+                {[1, 2, 3, 4, 5].map((rate) => (
+                  <option key={rate} value={rate}>
+                    {rate}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="mb-3">
