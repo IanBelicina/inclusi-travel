@@ -126,7 +126,7 @@ function ReviewComments() {
       <table className="table table-striped">
         <thead>
           <tr>
-            <th>Review</th>
+            {/* <th>Review</th> */}
             <th>Comment</th>
             <th>Created On</th>
             <th>Delete</th>
@@ -136,7 +136,7 @@ function ReviewComments() {
           {comments.map((comment) => {
             return (
               <tr key={comment.id}>
-                <td>{comment.review.body}</td>
+                {/* <td>{comment.review.body}</td> */}
                 <td>{comment.content}</td>
                 <td>{comment.created_on}</td>
                 <td>
