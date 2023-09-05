@@ -14,7 +14,7 @@ const CreateReview = () => {
 
   useEffect(() => {
     async function fetchLocations() {
-      const locationsUrl = `${process.env.REACT_APP_API_HOST}/api/locations`;
+      const locationsUrl = `${process.env.REACT_APP_API_HOST}/api/locations/`;
 
       const response = await fetch(locationsUrl);
 
