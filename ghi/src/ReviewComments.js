@@ -9,7 +9,6 @@ function ReviewComments() {
   const [comments, setComments] = useState([]);
   const [review, setReview] = useState([]);
   const reviewIdInt = parseInt(reviewId, 10);
-  const [accountId, setAccountId] = useState("");
   const [content, setContent] = useState("");
   const [userData, setUserData] = useState({});
 
@@ -112,6 +111,7 @@ function ReviewComments() {
 
   useEffect(() => {
     getUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return (
