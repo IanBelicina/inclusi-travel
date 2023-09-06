@@ -8,8 +8,62 @@ function LocationForm() {
   const [state, setState] = useState("");
   const [accessibilities, setaccessibilities] = useState([]);
   const [accessibilitiesID, setAccessibilitiesID] = useState([]);
+
   const [picture, setPicture] = useState("");
   const { token } = useAuthContext();
+  let states = [
+    "AK",
+    "AL",
+    "AR",
+    "AZ",
+    "CA",
+    "CO",
+    "CT",
+    "DC",
+    "DE",
+    "FL",
+    "GA",
+    "HI",
+    "IA",
+    "ID",
+    "IL",
+    "IN",
+    "KS",
+    "KY",
+    "LA",
+    "MA",
+    "MD",
+    "ME",
+    "MI",
+    "MN",
+    "MO",
+    "MS",
+    "MT",
+    "NC",
+    "ND",
+    "NE",
+    "NH",
+    "NJ",
+    "NM",
+    "NV",
+    "NY",
+    "OH",
+    "OK",
+    "OR",
+    "PA",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VA",
+    "VT",
+    "WA",
+    "WI",
+    "WV",
+    "WY",
+  ];
 
   async function fetchAccessibility() {
     const accessUrl = `${process.env.REACT_APP_API_HOST}/api/acessibility`;
@@ -101,13 +155,33 @@ function LocationForm() {
 
   function handleAccessbility(event) {
     const { value } = event.target;
-    setAccessibilitiesID((prev) => [...prev, value]);
-  }
 
+    if (accessibilitiesID.includes(value)) {
+      let delete_checked = accessibilitiesID.filter((item) => item !== value);
+      setAccessibilitiesID(delete_checked);
+      console.log("deleted", accessibilitiesID);
+    } else {
+      setAccessibilitiesID((prev) => [...prev, value]);
+      console.log("added", accessibilitiesID);
+    }
+  }
   useEffect(() => {
     fetchAccessibility();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  if (token == null) {
+    return (
+      <div
+        className="alert alert-danger d-flex align-items-center bi flex-shrink-0 me-2"
+        role="alert"
+      >
+        <div>
+          <p>Only logged in users can make a location :(</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="row">
       <div className="offset-3 col-6">
@@ -115,7 +189,6 @@ function LocationForm() {
           <h1>Add a Location</h1>
           <form onSubmit={handleSubmit} id="create-location-form">
             <div className="form-floating mb-3">
-              <label htmlFor="name">Location name</label>
               <input
                 value={name}
                 onChange={handleName}
@@ -126,9 +199,9 @@ function LocationForm() {
                 id="name"
                 className="form-control"
               />
+              <label htmlFor="name">Location name</label>
             </div>
             <div className="form-floating mb-3">
-              <label htmlFor="address">Address</label>
               <input
                 value={address}
                 onChange={handleAddress}
@@ -139,9 +212,9 @@ function LocationForm() {
                 id="address"
                 className="form-control"
               />
+              <label htmlFor="address">Address</label>
             </div>
             <div className="form-floating mb-3">
-              <label htmlFor="city">City</label>
               <input
                 value={city}
                 onChange={handleCity}
@@ -152,10 +225,10 @@ function LocationForm() {
                 id="city"
                 className="form-control"
               />
+              <label htmlFor="city">City</label>
             </div>
             <div className="form-floating mb-3">
-              <label htmlFor="state">State</label>
-              <input
+              <select
                 value={state}
                 onChange={handleState}
                 placeholder="state"
@@ -164,10 +237,17 @@ function LocationForm() {
                 name="state"
                 id="state"
                 className="form-control"
-              />
+              >
+                <option value="">Select a location</option>
+                {states.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="state">state</label>
             </div>
             <div className="form-floating mb-3">
-              <label htmlFor="picture">Picture URL</label>
               <input
                 value={picture}
                 onChange={handlePicture}
@@ -178,6 +258,7 @@ function LocationForm() {
                 id="picture"
                 className="form-control"
               />
+              <label htmlFor="picture">Picture URL</label>
             </div>
             <div className="form-floating mb-3">
               <div>
@@ -188,7 +269,7 @@ function LocationForm() {
                       id={accessibility.id}
                       name="accessibilities"
                       value={accessibility.id}
-                      onChange={handleAccessbility}
+                      onClick={handleAccessbility}
                       className="form-check-input"
                     />
                     <label

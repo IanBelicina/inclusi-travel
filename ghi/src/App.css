@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'bootstrap-icons/font/bootstrap-icons.css';
 
 .App {
   text-align: center;
@@ -42,11 +43,68 @@
 }
 
 .transparent-background {
-    background-color: rgba(255, 255, 255, 0.762); 
+    background-color: rgba(255, 255, 255, 0.762);
     padding: 5px;
-    border-radius: 5px; 
+    border-radius: 5px;
     display: inline-block;
 }
 .carousel-text {
     color: black;
+}
+
+.location-card {
+  display: grid;
+  border: solid white;
+  border-width: 24px 24px;
+  grid-template-columns: auto 1fr;
+  column-gap: 40px;
+
+}
+
+.location-card-right {
+  display: grid;
+  grid-auto-rows: auto;
+  gap: 24px
+}
+.update-location-card {
+  display: grid;
+  justify-content: center;
+  gap: 24px
+}
+.update-loc-items{
+  display: flex;
+}
+.loc-info {
+  text-align: center;
+  border: 1px black solid;
+}
+.access-list{
+display: grid;
+gap: 8px;
+border: 1px black solid;
+padding-bottom: 20px;
+padding-left: 16px;
+grid-template-rows: repeat(3, 24px);
+grid-auto-flow: column;
+font-size: 24px;
+}
+
+.icons-location {
+  display: flex;
+  grid-auto-rows: auto;
+  justify-content: flex-end;
+  
+}
+
+.icon-size{
+  font-size: 2em;
+}
+
+.textarea {
+  display: flex;
+  justify-content: center;
+  width: 25%;
+  overflow: hidden;
+  min-height: 40px;
+  line-height: 20px;
 }

@@ -13,7 +13,8 @@ import LocationForm from "./LocationForm";
 import LocationDetails from "./LocationDetails";
 import AccessibilityForm from "./AccessibilityForm";
 import BootstrapCarouselComponent from "./BootstrapCarouselComponent";
-
+import LocationUpdateForm from "./LocationUpdateform";
+import AccByLocUpdateForm from "./UpdateAccessibilityForLocation";
 function App() {
   // other stuff, here
   const domain = /https:\/\/[^/]+/;
@@ -35,6 +36,7 @@ function App() {
               path="/locations/:locationId"
               element={<LocationDetails />}
             />
+            <Route path="/locations/update" element={<LocationUpdateForm />} />
             <Route path="/review/form" element={<CreateReview />} />
             <Route path="/comments/new" element={<CommentForm />} />
             <Route path="/locations/form" element={<LocationForm />} />
@@ -43,6 +45,7 @@ function App() {
               element={<ReviewComments />}
             />
             <Route path="/accessibility/form" element={<AccessibilityForm />} />
+            <Route path="/accessibility/update" element={<AccByLocUpdateForm />} />
             <Route path="/photos" element={<BootstrapCarouselComponent />} />
           </Routes>
         </AuthProvider>
