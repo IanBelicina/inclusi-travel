@@ -23,3 +23,190 @@ After confirming you have the needed software to run the application, follow the
   - docker compose up
 - Open Docker desktop to confirm all containers are running.
 - Open the site on your browser at localhost:3000
+
+## Comments
+
+The Comments model in this application provides a set of CRUD APIs, allowing users to seamlessly manage and interact with comments associated with various content. These APIs empower users to Create new comments, Read existing comments, Update comment information, and Delete comments as needed. Below is a table of how you can access these endpoints and examples of expected input and output json responses.
+
+| Action                     | Method | URL                                                 |
+| -------------------------- | ------ | --------------------------------------------------- |
+| Get all review comments    | GET    | http://localhost:8000/reviews/{review_id}/comments  |
+| Get comment                | GET    | http://localhost:8000/reviews/comments/{comment_id} |
+| Update comment (protected) | PUT    | http://localhost:8000/reviews/comments/{comment_id} |
+| Delete comment (protected) | DELETE | http://localhost:8000/reviews/comments/{comment_id} |
+| Create comment (protected) | POST   | http://localhost:8000/reviews/comments              |
+
+### Get all review comments
+
+Input: review_id
+Response Body:
+
+```
+[
+  {
+    "id": 0,
+    "account_id": 0,
+    "content": "string",
+    "created_on": "2023-09-06",
+    "review": {
+      "id": 0,
+      "location_id": {
+        "id": 0,
+        "address": "string",
+        "city": "string",
+        "state": "string",
+        "location_name": "string",
+        "picture": "string",
+        "updated_on": "2023-09-06"
+      },
+      "account_id": {
+        "id": 0,
+        "first_name": "string",
+        "last_name": "string",
+        "date_of_birth": "2023-09-06",
+        "email": "string",
+        "username": "string"
+      },
+      "rating": 0,
+      "body": "string",
+      "created_on": "2023-09-06"
+    }
+  }
+]
+```
+
+### Get comment
+
+Input: comment_id
+Response Body:
+
+```
+{
+  "id": 0,
+  "account_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06",
+  "review": {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2023-09-06"
+  }
+}
+```
+
+### Update comment (protected)
+
+Input: comment_id and below request body
+
+```
+{
+  "account_id": 0,
+  "review_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06"
+}
+```
+
+Response Body:
+
+```
+{
+  "id": 0,
+  "account_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06",
+  "review": {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2023-09-06"
+  }
+}
+```
+
+### Delete comment (protected)
+
+Input: comment_id
+Response: True
+
+### Create comment (protected)
+
+Request Body:
+
+```
+{
+  "account_id": 0,
+  "review_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06"
+}
+```
+
+Response Body:
+
+```
+{
+  "id": 0,
+  "account_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06",
+  "review": {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2023-09-06"
+  }
+}
+```
