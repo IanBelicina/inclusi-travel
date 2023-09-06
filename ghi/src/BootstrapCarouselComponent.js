@@ -17,7 +17,7 @@ class BootstrapCarouselComponent extends React.Component {
                 <Carousel.Item>
                   <img
                     className="d-block w-100 rounded-carousel-image"
-                    src="https://images.pexels.com/photos/3791664/pexels-photo-3791664.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    src="https://images.pexels.com/photos/3791664/pexels-photo-3791664.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="First slide"
                   />
                   <Carousel.Caption>

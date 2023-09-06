@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { useAuthContext } from "@galvanize-inc/jwtdown-for-react";
+import LocationUpdateForm from "./LocationUpdateform";
+import AccByLocUpdateForm from "./UpdateAccessibilityForLocation";
 function LocationDetails() {
   const [location, setLocations] = useState({});
   const [accessibilities, setaccessibilities] = useState([]);
   const [locationReviews, setLocationReviews] = useState([]);
   const { token } = useAuthContext();
   const { locationId } = useParams();
+  const [update, setUpdate] = useState(false)
+  const [updateAccess, setUpdateAccess] = useState(false);
+
 
   async function fetchLocation() {
     // console.log(locationId);
@@ -47,6 +52,12 @@ function LocationDetails() {
     }
   }
 
+  async function handleUpdate(){
+    setUpdate(!update)
+  }
+  async function handleUpdateAccess() {
+    setUpdateAccess(!updateAccess);
+    }
   async function fetchReviews() {
     const reviewsUrl = `${process.env.REACT_APP_API_HOST}/api/reviews`;
 
@@ -76,24 +87,80 @@ function LocationDetails() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    fetchAccessibilities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateAccess]);
+
   return (
     <>
       <div className="card mb-4">
-        <div className="card-header">{location.location_name}</div>
-        <div className="card-body">
-          <h5 className="card-title">
-            {location.address} {location.city}, {location.state}
-          </h5>
-          <div>
-            {accessibilities.map((accessibility) => (
-              <div key={accessibility.id}>
-                <p>accessibility feature: {accessibility.name}</p>
-              </div>
-            ))}
+        <div className="location-card">
+          <img
+            src={location.picture}
+            className="img-fluid rounded-start"
+            style={{ maxHeight: "400px", maxWidth: "400px" }}
+            alt="..."
+          />
+          <div className="location-card-right">
+            {update ? (
+              <>
+                <div className="icons-location">
+                  <button onClick={handleUpdate} className="btn">
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                </div>
+                <LocationUpdateForm locationId={locationId} />
+              </>
+            ) : (
+              <>
+                <div className="loc-info">
+                  <h1 className="card-title">{location.location_name}</h1>
+                  <h3>
+                    {location.address} {location.city}, {location.state}
+                  </h3>
+                </div>
+                <div>
+                  <div className="loc-info">
+                    <h4>Accessibility Feature</h4>
+                  </div>
+                  {updateAccess ? (
+                    <>
+                    <button onClick={handleUpdateAccess} className="btn">
+                      EXIT
+                    </button>
+                    <AccByLocUpdateForm locationId={locationId} />
+                    </>
+                  ) : (
+                    <div className="access-list">
+                      {accessibilities.map((accessibility) => (
+                        <div key={accessibility.id}>
+                          <li>{accessibility.name}</li>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="icons-location">
+                  <div>
+                    <button onClick={handleDelete} className="btn">
+                      <i className="bi bi-trash3-fill  icon-size"></i>
+                    </button>
+                  </div>
+                  <div>
+                    <button onClick={handleUpdate} className="btn">
+                      <i className="bi bi-pencil-square icon-size"></i>
+                    </button>
+                  </div>
+                  <div>
+                    <button onClick={handleUpdateAccess} className="btn">
+                      Update
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-          <button onClick={handleDelete} className="btn btn-primary">
-            delete
-          </button>
         </div>
       </div>
       <table className="table table-striped">
