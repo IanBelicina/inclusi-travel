@@ -10,7 +10,7 @@ function Nav() {
     <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/">
-          <img src="Logo_no_bg.png" alt="logo" className="logo-image" />
+          <img src="/Logo_no_bg.png" alt="logo" className="logo-image" />
         </NavLink>
         <button
           className="navbar-toggler"
@@ -61,11 +61,11 @@ function Nav() {
                 </NavLink>
               </li>
             )}
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
               </NavLink>
-            </li>
+            </li> */}
             {token && (
               <li className="nav-item">
                 <LogoutButton />
