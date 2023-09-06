@@ -13,22 +13,18 @@ const CreateReview = () => {
   const { token } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_HOST}/api/locations`
-        );
+    async function fetchLocations() {
+      const locationsUrl = `${process.env.REACT_APP_API_HOST}/api/locations/`;
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+      const response = await fetch(locationsUrl);
 
+      if (response.ok) {
         const data = await response.json();
         setLocations(data.locations);
-      } catch (error) {
-        console.error("There was an error fetching locations!", error);
+      } else {
+        console.error(`HTTP error! status: ${response.status}`);
       }
-    };
+    }
 
     fetchLocations();
   }, []);
@@ -47,7 +43,6 @@ const CreateReview = () => {
         const data = await response.json();
 
         setUserAccountId(data);
-        // console.log(data.account.id);
       }
     }
     getUserData();
@@ -58,7 +53,6 @@ const CreateReview = () => {
 
     const review = {
       location_id: locationId,
-      // account_id: userAccountId,
       account_id: userAccountId.account.id,
       rating: rating,
       body: body,
