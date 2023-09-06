@@ -43,7 +43,6 @@ const CreateReview = () => {
         const data = await response.json();
 
         setUserAccountId(data);
-        
       }
     }
     getUserData();

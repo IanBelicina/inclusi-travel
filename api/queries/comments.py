@@ -166,11 +166,11 @@ class CommentRepository:
     def get_all_review_comments(
         self, review_id: int
     ) -> Union[List[CommentOut], Error]:
-        try:
-            with pool.connection() as conn:
-                with conn.cursor() as db:
-                    db.execute(
-                        """
+        # try:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                db.execute(
+                    """
                         select
                             c.id as comment_id
                             ,c.account_id as account_id_comment
@@ -205,26 +205,26 @@ class CommentRepository:
                         join locations l on r.location_id = l.id
                         where review_id =  %s
                         """,
-                        [review_id],
-                    )
-                    comments = []
-                    rows = db.fetchall()
-                    for row in rows:
-                        comment = self.comment_record_to_dict(
-                            row, db.description
-                        )
-                        comments.append(comment)
+                    [review_id],
+                )
+                comments = []
+                rows = db.fetchall()
+                for row in rows:
+                    comment = self.comment_record_to_dict(row, db.description)
+                    comments.append(comment)
 
-                    if comments != []:
-                        return comments
-                    else:
-                        raise HTTPException(
-                            status_code=404, detail="No comments found"
-                        )
+                return comments
 
-        except Exception as e:
-            print(e)
-            return Error(message="No review found for this id")
+                # if comments != []:
+                #     return comments
+                # else:
+                #     raise HTTPException(
+                #         status_code=404, detail="No comments found"
+                #     )
+
+    # except Exception as e:
+    #     print(e)
+    #     return Error(message="No review found for this id")
 
     def comment_record_to_dict(self, row, description) -> CommentOut:
         comment = None

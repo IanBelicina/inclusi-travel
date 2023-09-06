@@ -18,14 +18,7 @@ def test_get_all_review_comments():
 
     app.dependency_overrides = {}
 
-    api_response = response.json()
-    api_response_code = response.status_code
-    if api_response == []:
-        api_response = {
-            "detail": f"No comments found for review id {review_id}"
-        }
-        api_response_code = 404
-    assert api_response_code == 404
-    assert api_response == {
+    assert response.status_code == 404
+    assert response.json() == {
         "detail": f"No comments found for review id {review_id}"
     }
