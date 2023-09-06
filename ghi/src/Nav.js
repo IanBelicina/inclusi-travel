@@ -54,11 +54,13 @@ function Nav() {
                 Add an Accessibility
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/review/form/" activeclassname="active-link">
-                Create a Review
-              </NavLink>
-            </li>
+            {token && (
+              <li className="nav-item">
+                <NavLink to="/review/form/" activeclassname="active-link">
+                  Create a Review
+                </NavLink>
+              </li>
+            )}
             <li className="nav-item">
               <NavLink to="/comments/new/" activeclassname="active-link">
                 Add a Comment
