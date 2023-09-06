@@ -15,7 +15,7 @@ def get_all_review_comments(
     repo: CommentRepository = Depends(),
 ):
     comments = repo.get_all_review_comments(review_id)
-    if isinstance(repo.get_all_review_comments(review_id), Error):
+    if not comments:
         raise HTTPException(
             status_code=404,
             detail="No comments found for review id {}".format(review_id),
