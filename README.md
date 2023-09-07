@@ -223,7 +223,7 @@ Below you will find all the endpoints and examples of expected input and output 
 | Delete review (protected) | DELETE | http://localhost:8000/reviews/{review_id} |
 | Create review (protected) | POST | http://localhost:8000/reviews |
 
-Get all reviews
+### Get all reviews
 
 
 Response Body:
@@ -256,7 +256,7 @@ Response Body:
 ]
 ```
 
-Get review
+### Get review
 
 Input: id
 Response Body:
@@ -287,7 +287,7 @@ Response Body:
 }
 ```
 
-Update review (protected)
+### Update review (protected)
 Input: id
 
 ```
@@ -326,14 +326,14 @@ Response Body:
 }
 ```
 
-Delete review
+### Delete review
 Input: id
 Response Body:
 ```
 true
 ```
 
-Create review (protected)
+### Create review (protected)
 
 Request Body:
 ```
