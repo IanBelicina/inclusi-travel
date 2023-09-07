@@ -1,141 +1,212 @@
-# Module3 Project Gamma
+# InclusiTravel
 
-## Getting started
+InclusiTravel is the ultimate destination for individuals who want to make informed choices when it comes to accessible locations. Whether you're a person with disabilities seeking accessible venues or a compassionate advocate for inclusivity, InclusiTravel empowers you to leave your mark and shape a more inclusive world.
 
-You have a project repository, now what? The next section
-lists all of the deliverables that are due at the end of the
-week. Below is some guidance for getting started on the
-tasks for this week.
+## How To Run This App
 
-## Install Extensions
+If the application is still deployed at the time of reading this README, the application can be accessed at the below link
 
-- Prettier: <https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode>
-- Black Formatter: <https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter>
+- https://inclusitravel.gitlab.io/module3-project-gamma/
 
-## Deliverables
+If the application is no longer deployed the following software is required to run the application:
 
-- [ ] Wire-frame diagrams
-- [ ] API documentation
-- [ ] Project is deployed to Caprover (BE, DB) & GitLab-pages (FE)
-- [ ] GitLab issue board is setup and in use (or project management tool of choice)
-- [ ] Journals
+- Git
+- Docker
+- Node.js
 
-## Project layout
+After confirming you have the needed software to run the application, follow the below steps to get the application running on your local machine.
 
-The layout of the project is just like all of the projects
-you did with `docker-compose` in module #2. You will create
-a directory in the root of the repository for each service
-that you add to your project just like those previous
-projects were setup.
+- Fork and clone this repository onto your computer.
+- Build the project and run the project in docker using the following commands:
+  - docker volume create postgres-data
+  - docker compose build
+  - docker compose up
+- Open Docker desktop to confirm all containers are running.
+- Open the site on your browser at localhost:3000
 
-### Directories
+## Comments
 
-Several directories have been added to your project. The
-directories `docs` and `journals` are places for you and
-your team-mates to, respectively, put any documentation
-about your project that you create and to put your
-project-journal entries. See the _README.md_ file in each
-directory for more info.
+The Comments model in this application provides a set of CRUD APIs, allowing users to seamlessly manage and interact with comments associated with various content. These APIs empower users to Create new comments, Read existing comments, Update comment information, and Delete comments as needed. Below is a table of how you can access these endpoints and examples of expected input and output json responses.
 
-The other directories, `ghi` and `api`, are services, that
-you can start building off of.
+| Action                     | Method | URL                                                 |
+| -------------------------- | ------ | --------------------------------------------------- |
+| Get all review comments    | GET    | http://localhost:8000/reviews/{review_id}/comments  |
+| Get comment                | GET    | http://localhost:8000/reviews/comments/{comment_id} |
+| Update comment (protected) | PUT    | http://localhost:8000/reviews/comments/{comment_id} |
+| Delete comment (protected) | DELETE | http://localhost:8000/reviews/comments/{comment_id} |
+| Create comment (protected) | POST   | http://localhost:8000/reviews/comments              |
 
-Inside of `ghi` is a minimal React app that has an "under
-construction" page. It is setup similarly to all of the
-other React projects that you have worked on.
+### Get all review comments
 
-Inside of `api` is a minimal FastAPI application.
-"Where are all the files?" you might ask? Well, the
-`main.py` file is the whole thing, and go take look inside
-of it... There's not even much in there..., hmm? That is
-FastAPI, we'll learn more about it in the coming days. Can
-you figure out what this little web-application does even
-though you haven't learned about FastAPI yet?
+Input: review_id
+Response Body:
 
-Also in `api` is a directory for your migrations.
-If you choose to use PostgreSQL, then you'll want to use
-migrations to control your database. Unlike Django, where
-migrations were automatically created for you, you'll write
-yours by hand using DDL. Don't worry about not knowing what
-DDL means; we have you covered. There's a sample migration
-in there that creates two tables so you can see what they
-look like.
+```
+[
+  {
+    "id": 0,
+    "account_id": 0,
+    "content": "string",
+    "created_on": "2023-09-06",
+    "review": {
+      "id": 0,
+      "location_id": {
+        "id": 0,
+        "address": "string",
+        "city": "string",
+        "state": "string",
+        "location_name": "string",
+        "picture": "string",
+        "updated_on": "2023-09-06"
+      },
+      "account_id": {
+        "id": 0,
+        "first_name": "string",
+        "last_name": "string",
+        "date_of_birth": "2023-09-06",
+        "email": "string",
+        "username": "string"
+      },
+      "rating": 0,
+      "body": "string",
+      "created_on": "2023-09-06"
+    }
+  }
+]
+```
 
-The Dockerfile and Dockerfile.dev run your migrations
-for you automatically.
+### Get comment
 
-### Other files
+Input: comment_id
+Response Body:
 
-The following project files have been created as a minimal
-starting point. Please follow the guidance for each one for
-a most successful project.
+```
+{
+  "id": 0,
+  "account_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06",
+  "review": {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2023-09-06"
+  }
+}
+```
 
-- `docker-compose.yaml`: there isn't much in here, just a
-  **really** simple UI and FastAPI service. Add services
-  (like a database) to this file as you did with previous
-  projects in module #2.
-- `.gitlab-ci.yml`: This is your "ci/cd" file where you will
-  configure automated unit tests, code quality checks, and
-  the building and deployment of your production system.
-  Currently, all it does is deploy an "under construction"
-  page to your production UI on GitLab and a sample backend
-  to CapRover. We will learn much more about this file.
-- `.gitignore`: This is a file that prevents unwanted files
-  from getting added to your repository, files like
-  `pyc` files, `__pycache__`, etc. We've set it up so that
-  it has a good default configuration for Python projects.
-- `.env.sample`: This file is a template to copy when
-  creating environment variables for your team. Create a
-  copy called `.env` and put your own passwords in here
-  without fear of it being committed to git (see `.env`
-  listed in `.gitignore`). You can also put team related
-  environment variables in here, things like api and signing
-  keys that shouldn't be committed; these should be
-  duplicated in your deployed environments.
+### Update comment (protected)
 
-## How to complete the initial deploy
+Input: comment_id and below request body
 
-There will be further guidance on completing the initial
-deployment, but it just consists of these steps:
+```
+{
+  "account_id": 0,
+  "review_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06"
+}
+```
 
-### Setup GitLab repo/project
+Response Body:
 
-- make sure this project is in a group. If it isn't, stop
-  now and move it to a GitLab group
-- remove the fork relationship: In GitLab go to:
+```
+{
+  "id": 0,
+  "account_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06",
+  "review": {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2023-09-06"
+  }
+}
+```
 
-  Settings -> General -> Advanced -> Remove fork relationship
+### Delete comment (protected)
 
-- add these GitLab CI/CD variables:
-  - PUBLIC_URL : this is your gitlab pages URL
-  - REACT_APP_API_HOST: enter "blank" for now
+Input: comment_id
+Response: True
 
-#### Your GitLab pages URL
+### Create comment (protected)
 
-You can't find this in GitLab until after you've done a deploy
-but you can figure it out yourself from your GitLab project URL.
+Request Body:
 
-If this is your project URL
+```
+{
+  "account_id": 0,
+  "review_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06"
+}
+```
 
-https://gitlab.com/GROUP_NAME/PROJECT_NAME
+Response Body:
 
-then your GitLab pages URL will be
-
-https://GROUP_NAME.gitlab.io/PROJECT_NAME
-
-### Initialize CapRover
-
-1. Attain IP address and domain from an instructor
-1. Follow the steps in the CD Cookbook in Learn.
-
-### Update GitLab CI/CD variables
-
-Copy the service URL for your CapRover service and then paste
-that into the value for the REACT_APP_API_HOST CI/CD variable
-in GitLab.
-
-### Deploy it
-
-Merge a change into main to kick off the initial deploy. Once the build pipeline
-finishes you should be able to see an "under construction" page on your GitLab
-pages site.
+```
+{
+  "id": 0,
+  "account_id": 0,
+  "content": "string",
+  "created_on": "2023-09-06",
+  "review": {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2023-09-06"
+  }
+}
+```
