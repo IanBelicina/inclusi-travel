@@ -211,7 +211,7 @@ Response Body:
 }
 ```
 
-Reviews
+### Reviews
 
 Below you will find all the endpoints and examples of expected input and output JSON responses for the reviews model. These endpoints allow CRUD operations for the reviews.
 
