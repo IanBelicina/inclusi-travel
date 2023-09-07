@@ -9,6 +9,7 @@ function LocationForm() {
   const [accessibilities, setaccessibilities] = useState([]);
   const [accessibilitiesID, setAccessibilitiesID] = useState([]);
 
+
   const [picture, setPicture] = useState("");
   const { token } = useAuthContext();
   let states = [
@@ -67,9 +68,7 @@ function LocationForm() {
 
   async function fetchAccessibility() {
     const accessUrl = `${process.env.REACT_APP_API_HOST}/api/acessibility`;
-
     const response = await fetch(accessUrl);
-
     if (response.ok) {
       const data = await response.json();
       setaccessibilities(data.accessibilities);
@@ -124,8 +123,8 @@ function LocationForm() {
       };
 
       const locactionAccessibilityResponse = await fetch(url, fetchConfigAcc);
-      if (locactionAccessibilityResponse.ok) {
-        console.log("location", newLocationId, "accessability", acc);
+      if (!locactionAccessibilityResponse.ok) {
+        console.log("error");
       }
     }
   }
@@ -159,10 +158,8 @@ function LocationForm() {
     if (accessibilitiesID.includes(value)) {
       let delete_checked = accessibilitiesID.filter((item) => item !== value);
       setAccessibilitiesID(delete_checked);
-      console.log("deleted", accessibilitiesID);
     } else {
       setAccessibilitiesID((prev) => [...prev, value]);
-      console.log("added", accessibilitiesID);
     }
   }
   useEffect(() => {
@@ -182,6 +179,7 @@ function LocationForm() {
       </div>
     );
   }
+
   return (
     <div className="row">
       <div className="offset-3 col-6">
@@ -266,7 +264,6 @@ function LocationForm() {
                   <div key={accessibility.id} className="form-check">
                     <input
                       type="checkbox"
-                      id={accessibility.id}
                       name="accessibilities"
                       value={accessibility.id}
                       onClick={handleAccessbility}

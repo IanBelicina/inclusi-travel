@@ -14,14 +14,11 @@ import LocationDetails from "./LocationDetails";
 import AccessibilityForm from "./AccessibilityForm";
 import BootstrapCarouselComponent from "./BootstrapCarouselComponent";
 import LocationUpdateForm from "./LocationUpdateform";
-import AccByLocUpdateForm from "./UpdateAccessibilityForLocation";
+
 function App() {
   // other stuff, here
   const domain = /https:\/\/[^/]+/;
-  const basename = process.env.PUBLIC_URL.replace(
-    domain,
-    ""
-  );
+  const basename = process.env.PUBLIC_URL.replace(domain, "");
   return (
     <div className="container">
       <BrowserRouter basename={basename}>
@@ -45,7 +42,6 @@ function App() {
               element={<ReviewComments />}
             />
             <Route path="/accessibility/form" element={<AccessibilityForm />} />
-            <Route path="/accessibility/update" element={<AccByLocUpdateForm />} />
             <Route path="/photos" element={<BootstrapCarouselComponent />} />
           </Routes>
         </AuthProvider>

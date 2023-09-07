@@ -34,21 +34,21 @@ function LocationList() {
       }
     });
   }
-  async function Stars(){
+  async function Stars() {
     locations.map(async (location) => {
       let starrating = rating[location.id];
       const stars = [];
       let rate = Math.floor(starrating);
 
       for (let i = 0; i < rate; i++) {
-        stars.push(<i key = {i} className="bi bi-star-fill"></i>);
+        stars.push(<i key={i} className="bi bi-star-fill"></i>);
       }
       for (let i = rate; i < 5; i++) {
-        stars.push(<i key = {i} className="bi bi-star "></i>);
+        stars.push(<i key={i} className="bi bi-star "></i>);
       }
-      let locID = location.id
-      let starobj = {}
-      starobj[locID] = stars
+      let locID = location.id;
+      let starobj = {};
+      starobj[locID] = stars;
       setStars((loc) => ({
         ...loc,
         ...starobj,
@@ -78,15 +78,14 @@ function LocationList() {
       <div>
         <h1>Locations List</h1>
       </div>
-      <div className="input-group input-group-sm mb-3">
+      <div className="mb-3">
         <input
-          className="searchInput"
+          className="searchbar"
           type="search"
-          placeholder="search"
+          placeholder="Filter by Name"
           onChange={handleSearch}
         ></input>
       </div>
-
       {locations
         .filter((location) => {
           return (
