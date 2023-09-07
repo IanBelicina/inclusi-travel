@@ -40,7 +40,7 @@ function LocationDetails() {
 
   async function handleDelete(event) {
     event.preventDefault();
-    const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}/`;
+    const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}`;
     const fetchConfig = {
       method: "delete",
       headers: {
