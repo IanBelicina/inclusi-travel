@@ -6,8 +6,10 @@ import AccByLocUpdateForm from "./UpdateAccessibilityForLocation";
 import CreateReview from "./CreateReview";
 import { Navigate } from "react-router-dom";
 import ReviewComments from "./ReviewComments";
+import { Button } from "react-bootstrap";
 
 function LocationDetails() {
+  const [userData, setUserData] = useState(null);
   const [location, setLocations] = useState({});
   const [accessibilities, setaccessibilities] = useState([]);
   const [locationReviews, setLocationReviews] = useState([]);
@@ -17,6 +19,24 @@ function LocationDetails() {
   const [updateAccess, setUpdateAccess] = useState(false);
   const [redirectToLoc, setRedirectToLoc] = useState(false);
   const [stars, setStars] = useState({});
+
+  useEffect(() => {
+    async function getUserDataFromServer() {
+      const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setUserData(data);
+      }
+    }
+    getUserDataFromServer();
+  }, [token]);
 
   async function fetchLocation() {
     const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}`;
@@ -112,6 +132,21 @@ function LocationDetails() {
         ...starobj,
       }));
     });
+  }
+
+  async function handleDeleteReview(reviewId) {
+    const url = `${process.env.REACT_APP_API_HOST}/api/reviews/${reviewId}`;
+    const fetchConfig = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await fetch(url, fetchConfig);
+    if (response.ok) {
+      fetchReviews(); // Refresh the reviews after deletion
+    }
   }
 
   useEffect(() => {
@@ -219,6 +254,14 @@ function LocationDetails() {
               <div className="review-container-head">
                 <div>{stars[review.id]}</div>
                 <div>{review.created_on}</div>
+                {review.account_id.id === userData?.account?.id && (
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDeleteReview(review.id)}
+                  >
+                    Delete
+                  </Button>
+                )}
               </div>
               <p>{review.body}</p>
               <div>
