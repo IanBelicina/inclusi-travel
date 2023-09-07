@@ -5,18 +5,12 @@ import LoginForm from "./LoginForm";
 import HomePage from "./HomePage";
 import SignupForm from "./SignUpForm";
 import LocationList from "./ListLocation";
-import CreateReview from "./CreateReview";
-import ReviewComments from "./ReviewComments";
-import CommentForm from "./CommentForm";
 import Nav from "./Nav";
 import LocationForm from "./LocationForm";
 import LocationDetails from "./LocationDetails";
 import AccessibilityForm from "./AccessibilityForm";
-import BootstrapCarouselComponent from "./BootstrapCarouselComponent";
-import LocationUpdateForm from "./LocationUpdateform";
 
 function App() {
-  // other stuff, here
   const domain = /https:\/\/[^/]+/;
   const basename = process.env.PUBLIC_URL.replace(domain, "");
   return (
@@ -27,22 +21,14 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/account/signup" element={<SignupForm />} />
-            <Route path="/Token" element={<LoginForm />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route path="/locations" element={<LocationList />} />
             <Route
               path="/locations/:locationId"
               element={<LocationDetails />}
             />
-            <Route path="/locations/update" element={<LocationUpdateForm />} />
-            <Route path="/review/form" element={<CreateReview />} />
-            <Route path="/comments/new" element={<CommentForm />} />
             <Route path="/locations/form" element={<LocationForm />} />
-            <Route
-              path="/review/:reviewId/details"
-              element={<ReviewComments />}
-            />
             <Route path="/accessibility/form" element={<AccessibilityForm />} />
-            <Route path="/photos" element={<BootstrapCarouselComponent />} />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
