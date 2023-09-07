@@ -210,3 +210,164 @@ Response Body:
   }
 }
 ```
+
+Reviews
+
+Below you will find all the endpoints and examples of expected input and output JSON responses for the reviews model. These endpoints allow CRUD operations for the reviews.
+
+| Action | Method | URL |
+| -------------------------- | ------ | --------------------------------------------------- |
+| Get all reviews | GET | http://localhost:8000/reviews |
+| Get review | GET | http://localhost:8000/reviews/{review_id} |
+| Update review (protected) | PUT | http://localhost:8000/reviews/{review_id} |
+| Delete review (protected) | DELETE | http://localhost:8000/reviews/{review_id} |
+| Create review (protected) | POST | http://localhost:8000/reviews |
+
+Get all reviews
+
+
+Response Body:
+
+```
+[
+  {
+    "id": 0,
+    "location_id": {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-06"
+    },
+    "account_id": {
+      "id": 0,
+      "first_name": "string",
+      "last_name": "string",
+      "date_of_birth": "2023-09-06",
+      "email": "string",
+      "username": "string"
+    },
+    "rating": 0,
+    "body": "string",
+    "created_on": "2020-02-12"
+  }
+]
+```
+
+Get review
+
+Input: id
+Response Body:
+
+```
+{
+  "id": 0,
+  "location_id": {
+    "id": 0,
+    "address": "string",
+    "city": "string",
+    "state": "string",
+    "location_name": "string",
+    "picture": "string",
+    "updated_on": "2023-09-07"
+  },
+  "account_id": {
+    "id": 0,
+    "first_name": "string",
+    "last_name": "string",
+    "date_of_birth": "2023-09-07",
+    "email": "string",
+    "username": "string"
+  },
+  "rating": 0,
+  "body": "string",
+  "created_on": "2020-02-12"
+}
+```
+
+Update review (protected)
+Input: id
+
+```
+Request body:
+{
+  "location_id": 0,
+  "account_id": 0,
+  "rating": 0,
+  "body": "string",
+  "created_on": "2023-09-07"
+}
+
+Response Body:
+{
+  "id": 0,
+  "location_id": {
+    "id": 0,
+    "address": "string",
+    "city": "string",
+    "state": "string",
+    "location_name": "string",
+    "picture": "string",
+    "updated_on": "2023-09-07"
+  },
+  "account_id": {
+    "id": 0,
+    "first_name": "string",
+    "last_name": "string",
+    "date_of_birth": "2023-09-07",
+    "email": "string",
+    "username": "string"
+  },
+  "rating": 0,
+  "body": "string",
+  "created_on": "2022-01-01"
+}
+```
+
+Delete review
+Input: id
+Response Body:
+```
+true
+```
+
+Create review (protected)
+
+Request Body:
+```
+{
+  "location_id": 0,
+  "account_id": 0,
+  "rating": 0,
+  "body": "string",
+  "created_on": "2023-09-07"
+}
+```
+Response Body:
+```
+{
+  "id": 0,
+  "location_id": {
+    "id": 0,
+    "address": "string",
+    "city": "string",
+    "state": "string",
+    "location_name": "string",
+    "picture": "string",
+    "updated_on": "2023-09-07"
+  },
+  "account_id": {
+    "id": 0,
+    "first_name": "string",
+    "last_name": "string",
+    "date_of_birth": "2023-09-07",
+    "email": "string",
+    "username": "string"
+  },
+  "rating": 0,
+  "body": "string",
+  "created_on": "2023-09-07"
+}
+```
