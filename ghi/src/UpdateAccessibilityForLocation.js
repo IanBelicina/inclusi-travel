@@ -19,7 +19,7 @@ function AccByLocUpdateForm({ locationId }) {
   }
 
   async function CurAccessibility() {
-    const accessbylocation = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}/accessibilities/`;
+    const accessbylocation = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}/accessibilities`;
     const response = await fetch(accessbylocation);
     if (response.ok) {
       const curr_acc = await response.json();
