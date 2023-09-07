@@ -21,7 +21,6 @@ const CommentForm = () => {
     commentData.content = content;
     commentData.created_on = createdOn;
 
-    // console.log(commentData);
     const url = `${process.env.REACT_APP_API_HOST}/reviews/comments`;
     const fetchConfig = {
       method: "post",
@@ -34,7 +33,6 @@ const CommentForm = () => {
     const response = await fetch(url, fetchConfig);
 
     if (response.ok) {
-      console.log(response, "Response");
       e.target.reset();
       navigate("/");
     }

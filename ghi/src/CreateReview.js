@@ -2,32 +2,13 @@ import { useContext } from "react";
 import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
 import React, { useState, useEffect } from "react";
 
-const CreateReview = () => {
-  const [locations, setLocations] = useState([]);
-  const [locationId, setLocationId] = useState("");
+const CreateReview = ({ locationId, fetchReviews }) => {
   const [userAccountId, setUserAccountId] = useState(null);
   const [rating, setRating] = useState("");
   const [body, setBody] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { token } = useContext(AuthContext);
-
-  useEffect(() => {
-    async function fetchLocations() {
-      const locationsUrl = `${process.env.REACT_APP_API_HOST}/api/locations/`;
-
-      const response = await fetch(locationsUrl);
-
-      if (response.ok) {
-        const data = await response.json();
-        setLocations(data.locations);
-      } else {
-        console.error(`HTTP error! status: ${response.status}`);
-      }
-    }
-
-    fetchLocations();
-  }, []);
 
   useEffect(() => {
     async function getUserData() {
@@ -75,9 +56,9 @@ const CreateReview = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       } else {
-        const data = await response.json();
-        console.log(data);
+        await response.json();
         setIsSubmitted(true);
+        fetchReviews();
       }
     } catch (error) {
       console.error("There was an error!", error);
@@ -85,36 +66,23 @@ const CreateReview = () => {
   };
 
   return (
-    <div className="card text-bg-light mb-3">
-      <h5 className="card-header">New Review</h5>
+    <div className="create-review-card">
       <div className="card-body">
         {isSubmitted ? (
           <p>Thanks for your review!</p>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="locationId" className="form-label">
-                Location:
-              </label>
-              <select
+              <textarea
                 className="form-control"
-                id="locationId"
-                value={locationId}
-                onChange={(e) => setLocationId(e.target.value)}
-              >
-                <option value="">Select a location</option>
-                {locations.map((location) => (
-                  <option key={location.id} value={location.id}>
-                    {location.location_name}
-                  </option>
-                ))}
-              </select>
+                id="body"
+                rows="3"
+                value={body}
+                placeholder="Share your thoughts....."
+                onChange={(e) => setBody(e.target.value)}
+              />
             </div>
-
             <div className="mb-3">
-              <label htmlFor="rating" className="form-label">
-                Rating:
-              </label>
               <select
                 className="form-control"
                 id="rating"
@@ -129,20 +97,6 @@ const CreateReview = () => {
                 ))}
               </select>
             </div>
-
-            <div className="mb-3">
-              <label htmlFor="body" className="form-label">
-                Body:
-              </label>
-              <textarea
-                className="form-control"
-                id="body"
-                rows="3"
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-              />
-            </div>
-
             <button type="submit" className="btn btn-primary">
               Submit Review
             </button>

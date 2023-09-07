@@ -1,83 +1,80 @@
 import React, { useState, useEffect } from "react";
 import { useAuthContext } from "@galvanize-inc/jwtdown-for-react";
 
-function LocationUpdateForm({locationId}) {
-    async function fetchLocation() {
-        console.log(locationId);
-        const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}`;
+function LocationUpdateForm({ locationId }) {
+  async function fetchLocation() {
+    const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}`;
 
-        const response = await fetch(url);
-        console.log(locationId);
-        if (response.ok) {
-        const data = await response.json();
-        console.log("data",data)
-        setName(data.location_name);
-        setAddress(data.address)
-        setCity(data.city);
-        setState(data.state)
-        setPicture(data.picture)
-        }
+    const response = await fetch(url);
+    if (response.ok) {
+      const data = await response.json();
+      setName(data.location_name);
+      setAddress(data.address);
+      setCity(data.city);
+      setState(data.state);
+      setPicture(data.picture);
     }
+  }
 
-    const [name, setName] = useState("");
-    const [address, setAddress] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [picture, setPicture] = useState("");
-    const { token } = useAuthContext();
-     let states = [
-       "AK",
-       "AL",
-       "AR",
-       "AZ",
-       "CA",
-       "CO",
-       "CT",
-       "DC",
-       "DE",
-       "FL",
-       "GA",
-       "HI",
-       "IA",
-       "ID",
-       "IL",
-       "IN",
-       "KS",
-       "KY",
-       "LA",
-       "MA",
-       "MD",
-       "ME",
-       "MI",
-       "MN",
-       "MO",
-       "MS",
-       "MT",
-       "NC",
-       "ND",
-       "NE",
-       "NH",
-       "NJ",
-       "NM",
-       "NV",
-       "NY",
-       "OH",
-       "OK",
-       "OR",
-       "PA",
-       "RI",
-       "SC",
-       "SD",
-       "TN",
-       "TX",
-       "UT",
-       "VA",
-       "VT",
-       "WA",
-       "WI",
-       "WV",
-       "WY",
-     ];
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [picture, setPicture] = useState("");
+  const { token } = useAuthContext();
+  let states = [
+    "AK",
+    "AL",
+    "AR",
+    "AZ",
+    "CA",
+    "CO",
+    "CT",
+    "DC",
+    "DE",
+    "FL",
+    "GA",
+    "HI",
+    "IA",
+    "ID",
+    "IL",
+    "IN",
+    "KS",
+    "KY",
+    "LA",
+    "MA",
+    "MD",
+    "ME",
+    "MI",
+    "MN",
+    "MO",
+    "MS",
+    "MT",
+    "NC",
+    "ND",
+    "NE",
+    "NH",
+    "NJ",
+    "NM",
+    "NV",
+    "NY",
+    "OH",
+    "OK",
+    "OR",
+    "PA",
+    "RI",
+    "SC",
+    "SD",
+    "TN",
+    "TX",
+    "UT",
+    "VA",
+    "VT",
+    "WA",
+    "WI",
+    "WV",
+    "WY",
+  ];
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -106,7 +103,6 @@ function LocationUpdateForm({locationId}) {
       setCity("");
       setState("");
       setPicture("");
-
     }
   }
 

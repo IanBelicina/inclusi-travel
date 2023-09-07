@@ -24,7 +24,6 @@ function AccByLocUpdateForm({ locationId }) {
     if (response.ok) {
       const curr_acc = await response.json();
       setCurrentAccessibility(curr_acc.accessibilities);
-      console.log("list", currentAccessibility);
     }
   }
 
@@ -34,10 +33,8 @@ function AccByLocUpdateForm({ locationId }) {
     if (accessibilitiesID.includes(value)) {
       let delete_checked = accessibilitiesID.filter((item) => item !== value);
       setAccessibilitiesID(delete_checked);
-      console.log("deleted", accessibilitiesID);
     } else {
       setAccessibilitiesID((prev) => [...prev, value]);
-      console.log("added", accessibilitiesID);
     }
   }
 
@@ -45,8 +42,6 @@ function AccByLocUpdateForm({ locationId }) {
     event.preventDefault();
     for (let access of currentAccessibility) {
       if (!accessibilitiesID.includes(access.id)) {
-        console.log(access.id);
-
         const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}/accessibilities/${access.id}`;
         const fetchConfigAcc = {
           method: "delete",
@@ -57,7 +52,6 @@ function AccByLocUpdateForm({ locationId }) {
         };
         const locactionAccessibilityResponse = await fetch(url, fetchConfigAcc);
         if (locactionAccessibilityResponse.ok) {
-          console.log("ok");
         }
       }
     }
@@ -73,7 +67,6 @@ function AccByLocUpdateForm({ locationId }) {
         };
         const response = await fetch(url, fetchConfig);
         if (response.ok) {
-          console.log("good");
         }
       }
     }
