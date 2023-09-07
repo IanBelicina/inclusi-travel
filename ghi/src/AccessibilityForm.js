@@ -29,9 +29,7 @@ function AccessibilityForm() {
 
     const response = await fetch(url, fetchConfig);
     if (response.ok) {
-      const newAccessibility = await response.json();
-      console.log(newAccessibility);
-
+      await response.json();
       setName("");
     }
   };

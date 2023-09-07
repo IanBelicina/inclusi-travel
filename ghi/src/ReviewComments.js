@@ -1,14 +1,10 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "@galvanize-inc/jwtdown-for-react";
 
-function ReviewComments() {
+function ReviewComments({ reviewIdInt }) {
   const { token } = useContext(AuthContext);
-  const { reviewId } = useParams();
   const [comments, setComments] = useState([]);
-  const [review, setReview] = useState([]);
-  const reviewIdInt = parseInt(reviewId, 10);
   const [content, setContent] = useState("");
   const [userData, setUserData] = useState({});
 
@@ -19,23 +15,6 @@ function ReviewComments() {
     if (response.ok) {
       const data = await response.json();
       setComments(data);
-    }
-  }
-
-  async function getReview() {
-    const response = await fetch(
-      `${process.env.REACT_APP_API_HOST}/api/reviews/${reviewIdInt}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    if (response.ok) {
-      const data = await response.json();
-      setReview(data);
     }
   }
 
@@ -60,9 +39,8 @@ function ReviewComments() {
 
     const commentData = {};
 
-    // commentData.account_id = accountId;
     commentData.account_id = userData.account.id;
-    commentData.review_id = reviewId;
+    commentData.review_id = reviewIdInt;
     commentData.content = content;
 
     commentData.created_on = new Date().toISOString().slice(0, 10);
@@ -95,17 +73,12 @@ function ReviewComments() {
     });
     if (response.ok) {
       const data = await response.json();
-      // console.log(data, "this is data");
       setUserData(data);
     }
   }
 
-  console.log(userData, "this is userData state");
-
   useEffect(() => {
     getReviewComments();
-    getReview();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -116,58 +89,9 @@ function ReviewComments() {
 
   return (
     <>
-      <div className="card mb-4">
-        <div className="card-header">Review</div>
-        <div className="card-body">
-          <h5 className="card-title">{review.body}</h5>
-        </div>
-      </div>
-
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            {/* <th>Review</th> */}
-            <th>Comment</th>
-            <th>Created On</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {comments.map((comment) => {
-            return (
-              <tr key={comment.id}>
-                {/* <td>{comment.review.body}</td> */}
-                <td>{comment.content}</td>
-                <td>{comment.created_on}</td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDeleteComment(comment.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
       <div className="card text-bg-light mb-3">
-        <h5 className="card-header">New Comment</h5>
         <div className="card-body">
           <form onSubmit={(e) => handleCommentCreation(e)}>
-            {/* <div className="mb-3">
-              <label className="form-label">Account ID</label>
-              <input
-                name="accountid"
-                type="number"
-                className="form-control"
-                onChange={(e) => {
-                  setAccountId(e.target.value);
-                }}
-              />
-            </div> */}
-
             <div className="mb-3">
               <label className="form-label">Content</label>
               <input
@@ -179,7 +103,6 @@ function ReviewComments() {
                 }}
               />
             </div>
-
             <div>
               <input
                 className="btn btn-primary"
@@ -189,6 +112,26 @@ function ReviewComments() {
             </div>
           </form>
         </div>
+      </div>
+
+      <div>
+        {comments.map((comment) => {
+          return (
+            <div key={comment.id}>
+              <div>{comment.review.body}</div>
+              <div>{comment.content}</div>
+              <div>{comment.created_on}</div>
+              <div>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteComment(comment.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </>
   );
