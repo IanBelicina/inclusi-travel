@@ -225,10 +225,9 @@ Below you will find all the endpoints and examples of expected input and output 
 
 ### Get all reviews
 
-
+```
 Response Body:
 
-```
 [
   {
     "id": 0,
@@ -259,9 +258,9 @@ Response Body:
 ### Get review
 
 Input: id
+```
 Response Body:
 
-```
 {
   "id": 0,
   "location_id": {
@@ -289,7 +288,6 @@ Response Body:
 
 ### Update review (protected)
 Input: id
-
 ```
 Request body:
 {
@@ -328,15 +326,16 @@ Response Body:
 
 ### Delete review
 Input: id
-Response Body:
+
 ```
+Response Body:
 true
 ```
 
 ### Create review (protected)
 
-Request Body:
 ```
+Request Body:
 {
   "location_id": 0,
   "account_id": 0,
@@ -344,9 +343,9 @@ Request Body:
   "body": "string",
   "created_on": "2023-09-07"
 }
-```
+
 Response Body:
-```
+
 {
   "id": 0,
   "location_id": {
