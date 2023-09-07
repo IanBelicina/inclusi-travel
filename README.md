@@ -218,9 +218,9 @@ Below you will find all the endpoints and examples of expected input and output 
 | Action | Method | URL |
 | -------------------------- | ------ | --------------------------------------------------- |
 | Get all reviews | GET | http://localhost:8000/reviews |
-| Get review | GET | http://localhost:8000/reviews/{review_id} |
-| Update review (protected) | PUT | http://localhost:8000/reviews/{review_id} |
-| Delete review (protected) | DELETE | http://localhost:8000/reviews/{review_id} |
+| Get review | GET | http://localhost:8000/reviews/{id} |
+| Update review (protected) | PUT | http://localhost:8000/reviews/{id} |
+| Delete review (protected) | DELETE | http://localhost:8000/reviews/{id} |
 | Create review (protected) | POST | http://localhost:8000/reviews |
 
 ### Get all reviews
