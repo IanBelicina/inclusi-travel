@@ -19,6 +19,9 @@ function ReviewComments({ reviewIdInt }) {
   }
 
   async function handleDeleteComment(commentId) {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
     const response = await fetch(
       `${process.env.REACT_APP_API_HOST}/reviews/comments/${commentId}`,
       {
@@ -118,16 +121,17 @@ function ReviewComments({ reviewIdInt }) {
         {comments.map((comment) => {
           return (
             <div key={comment.id}>
-              <div>{comment.review.body}</div>
               <div>{comment.content}</div>
               <div>{comment.created_on}</div>
               <div>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDeleteComment(comment.id)}
-                >
-                  Delete
-                </button>
+                {comment.account_id === userData?.account?.id && (
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteComment(comment.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             </div>
           );

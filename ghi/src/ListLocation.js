@@ -16,7 +16,6 @@ function LocationList() {
       setLocations(data.locations);
     }
   }
-  // console.log(locations)
 
   async function Rating() {
     locations.map(async (location) => {
@@ -71,8 +70,6 @@ function LocationList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rating]);
 
-
-  console.log(stars)
   return (
     <>
       <div>
