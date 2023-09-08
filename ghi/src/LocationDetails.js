@@ -6,7 +6,6 @@ import AccByLocUpdateForm from "./UpdateAccessibilityForLocation";
 import CreateReview from "./CreateReview";
 import { Navigate } from "react-router-dom";
 import ReviewComments from "./ReviewComments";
-import { Button } from "react-bootstrap";
 
 function LocationDetails() {
   const [userData, setUserData] = useState(null);
@@ -60,7 +59,7 @@ function LocationDetails() {
 
   async function handleDelete(event) {
     event.preventDefault();
-    const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}`;
+    const url = `${process.env.REACT_APP_API_HOST}/api/locations/${locationId}/`;
     const fetchConfig = {
       method: "delete",
       headers: {
@@ -145,7 +144,7 @@ function LocationDetails() {
     };
     const response = await fetch(url, fetchConfig);
     if (response.ok) {
-      fetchReviews(); 
+      fetchReviews();
     }
   }
 
@@ -163,10 +162,11 @@ function LocationDetails() {
     Stars();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [locationReviews]);
+
   return (
     <>
       {redirectToLoc ? <Navigate to="/locations/" /> : null}
-      <div className="location-card">
+      <div className="location-card ">
         <div className="location-card-left">
           <div className="picture">
             <img
@@ -219,9 +219,11 @@ function LocationDetails() {
                   </div>
                   {updateAccess ? (
                     <>
-                      <button onClick={handleUpdateAccess} className="btn">
-                        EXIT
-                      </button>
+                      <div className="icons-location">
+                        <button onClick={handleUpdateAccess} className="btn">
+                          <i className="bi bi-x-lg"></i>
+                        </button>
+                      </div>
                       <AccByLocUpdateForm locationId={locationId} />
                     </>
                   ) : (
@@ -254,28 +256,50 @@ function LocationDetails() {
               <div className="review-container-head">
                 <div>{stars[review.id]}</div>
                 <div>{review.created_on}</div>
-                {review.account_id.id === userData?.account?.id && (
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDeleteReview(review.id)}
-                  >
-                    Delete
-                  </Button>
-                )}
               </div>
               <p>{review.body}</p>
               <div>
                 {review.replies ? (
                   <div>
+                    <div className="review-container-bottom">
+                      <button
+                        className="btn"
+                        onClick={() => handleReplies(review.id)}
+                      >
+                        close comments
+                      </button>
+                      <div>
+                        {review.account_id.id === userData?.account?.id && (
+                          <button
+                            className="btn"
+                            onClick={() => handleDeleteReview(review.id)}
+                          >
+                            <i className="bi bi-trash3-fill  icon-size"></i>
+                          </button>
+                        )}
+                      </div>
+                    </div>
                     <ReviewComments reviewIdInt={review.id} />
-                    <button onClick={() => handleReplies(review.id)}>
-                      close replies
-                    </button>
                   </div>
                 ) : (
-                  <button onClick={() => handleReplies(review.id)}>
-                    replies
-                  </button>
+                  <div className="review-container-bottom">
+                    <button
+                      className="btn"
+                      onClick={() => handleReplies(review.id)}
+                    >
+                      comments
+                    </button>
+                    <div>
+                      {review.account_id.id === userData?.account?.id && (
+                        <button
+                          className="btn"
+                          onClick={() => handleDeleteReview(review.id)}
+                        >
+                          <i className="bi bi-trash3-fill  icon-size"></i>
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
