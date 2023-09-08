@@ -31,10 +31,16 @@ const HomePage = () => {
 
   if (!authContext.token) {
     return (
-      <div>
-        
-        <div>
-          
+      <div className="home-page">
+        <div className="website-description">
+          <h1>Welcome to InclusiTravel!</h1>
+          <p>
+            InclusiTravel is the ultimate destination for individuals who want
+            to make informed choices when it comes to accessible locations.
+            Whether you're a person with disabilities seeking accessible venues
+            or a compassionate advocate for inclusivity, InclusiTravel empowers
+            you to leave your mark and shape a more inclusive world.
+          </p>
           <BootstrapCarouselComponent />
         </div>
 
@@ -63,8 +69,17 @@ const HomePage = () => {
   }
 
   return (
-    <div>
-      
+    <div className="home-page">
+      <div className="website-description">
+        <h1>Welcome to InclusiTravel!</h1>
+        <p>
+          InclusiTravel is the ultimate destination for individuals who want to
+          make informed choices when it comes to accessible locations. Whether
+          you're a person with disabilities seeking accessible venues or a
+          compassionate advocate for inclusivity, InclusiTravel empowers you to
+          leave your mark and shape a more inclusive world.
+        </p>
+      </div>
       <BootstrapCarouselComponent />
     </div>
   );
