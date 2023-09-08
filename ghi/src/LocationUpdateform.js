@@ -22,6 +22,8 @@ function LocationUpdateForm({ locationId }) {
   const [state, setState] = useState("");
   const [picture, setPicture] = useState("");
   const { token } = useAuthContext();
+  const [submitted, setSubmitted] = useState(false);
+
   let states = [
     "AK",
     "AL",
@@ -103,6 +105,7 @@ function LocationUpdateForm({ locationId }) {
       setCity("");
       setState("");
       setPicture("");
+      setSubmitted(true);
     }
   }
 
@@ -135,87 +138,98 @@ function LocationUpdateForm({ locationId }) {
 
   return (
     <>
-      <div className="update-location-card ">
-        <div>
-          <label>Location Name</label>
-          <input
-            value={name}
-            onChange={handleName}
-            placeholder="name"
-            required
-            type="text"
-            name="name"
-            id="name"
-            className="form-control textarea "
-          />
+      {submitted ? (
+        <div
+          className="alert alert-success d-flex align-items-center bi flex-shrink-0 me-2"
+          role="alert"
+        >
+          <div>
+            <p>Thank you for updating the location!</p>
+          </div>
         </div>
-        <div className="update-loc-items">
+      ) : (
+        <div className="update-location-card ">
           <div>
-            <label>Address</label>
+            <label>Location Name</label>
             <input
-              value={address}
-              onChange={handleAddress}
-              placeholder="address"
+              value={name}
+              onChange={handleName}
+              placeholder="name"
               required
               type="text"
-              name="address"
-              id="address"
-              className="form-control"
+              name="name"
+              id="name"
+              className="form-control textarea "
             />
           </div>
-          <div>
-            <label>City</label>
-            <input
-              value={city}
-              onChange={handleCity}
-              placeholder="city"
-              required
-              type="text"
-              name="city"
-              id="city"
-              className="form-control"
-            />
-          </div>
-          <div>
-            <label>State</label>
+          <div className="update-loc-items">
+            <div>
+              <label>Address</label>
+              <input
+                value={address}
+                onChange={handleAddress}
+                placeholder="address"
+                required
+                type="text"
+                name="address"
+                id="address"
+                className="form-control"
+              />
+            </div>
+            <div>
+              <label>City</label>
+              <input
+                value={city}
+                onChange={handleCity}
+                placeholder="city"
+                required
+                type="text"
+                name="city"
+                id="city"
+                className="form-control"
+              />
+            </div>
+            <div>
+              <label>State</label>
 
-            <select
-              value={state}
-              onChange={handleState}
-              placeholder="state"
+              <select
+                value={state}
+                onChange={handleState}
+                placeholder="state"
+                required
+                type="text"
+                name="state"
+                id="state"
+                className="form-control "
+              >
+                {states.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>Picture Url</label>
+            <input
+              value={picture}
+              onChange={handlePicture}
+              placeholder="picture"
               required
               type="text"
-              name="state"
-              id="state"
-              className="form-control "
-            >
-              {states.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
+              name="picture"
+              id="picture"
+              className="form-control"
+            />
+          </div>
+          <div className="form-floating mb-3">
+            <button onClick={handleSubmit} className="btn btn-primary">
+              Update
+            </button>
           </div>
         </div>
-        <div>
-          <label>Picture Url</label>
-          <input
-            value={picture}
-            onChange={handlePicture}
-            placeholder="picture"
-            required
-            type="text"
-            name="picture"
-            id="picture"
-            className="form-control"
-          />
-        </div>
-        <div className="form-floating mb-3">
-          <button onClick={handleSubmit} className="btn btn-primary">
-            Update
-          </button>
-        </div>
-      </div>
+      )}
     </>
   );
 }

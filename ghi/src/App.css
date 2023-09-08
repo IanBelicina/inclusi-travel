@@ -28,7 +28,9 @@
   height: 70px;
   width: auto;
 }
-
+.white-text{
+  color: white;
+}
 .travel-with-confidence {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
@@ -62,7 +64,7 @@
 }
 .create-review-card {
   border-radius: 8px;
-  border: 1px solid rgb(135, 135, 135);
+  border: 1px solid black;
   padding: 16px;
   background-color: #ffffff;
 }
@@ -97,8 +99,14 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  border-bottom: 1px solid rgb(64, 69, 64);
+  border-bottom: 1px solid rgba(145, 145, 145, 0.422);
 }
+.review-container-bottom{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .update-location-card {
   display: grid;
   justify-content: center;
@@ -124,13 +132,11 @@
   padding: 0px 10px;
 }
 .access-list {
-  display: grid;
-  gap: 8px;
-  padding-bottom: 20px;
-  padding-left: 16px;
-  grid-template-rows: repeat(3, 24px);
-  grid-auto-flow: column;
-  font-size: 24px;
+display: grid;
+gap: 8px;
+padding-bottom: 20px;
+padding-left: 16px;
+font-size: 24px;
 }
 
 .icons-location {
@@ -153,7 +159,7 @@
 }
 .searchbar {
   border-radius: 1000px;
-  width: 40%;
+  width: 55em;
   padding-left: 16px;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -183,4 +189,83 @@
   max-width: 80%;
   padding: 20px;
   color: white;
+}
+
+.comment-list{
+  display: flex;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  flex-direction: column;
+  gap: 16px;
+}
+.commentbody{
+  display: grid;
+  border: 1px rgb(182, 178, 178) solid;
+  width: 100%;
+  box-shadow: 0px 0px 3px 3px#eae7e7;
+  border-radius: 16px;
+  padding-top: 8px;
+  padding-right: 16px;
+  padding-left: 16px;
+  padding-bottom: 8px;
+  background-color: #ffffff;
+}
+.comment-head{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  font-size: .75em;
+}
+.bottom-page-padding{
+  padding-bottom: 48px;
+}
+.location-listing-container{
+  display: flex;
+  flex-direction: column;
+  height: 450px;
+  width: 400px;
+  background-color: #f6f6f9;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 16px;
+
+}
+.location-listing-container :hover{
+  opacity: 75%;
+}
+
+.location-listing-picture{
+  height: 67%;
+  width:400px;
+  text-align: center;
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+
+}
+.location-listing-text{
+  height: 33%;
+  width:400px;
+  overflow: hidden;
+  padding:16px;
+  text-decoration: none;
+  border-radius: 16px;
+
+}
+
+.unlink-text{
+  text-decoration: none;
+  color: black;
+}
+
+.unlink-text :hover{
+  text-decoration: none;
+  color: black;
+}
+
+.title-searchbar-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 24px;
+
 }

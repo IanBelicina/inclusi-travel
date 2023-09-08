@@ -10,7 +10,7 @@ function LogoutButton() {
     navigate("/");
   }
   return (
-    <div>
+    <div className="white-text">
       <button onClick={handleLogout}>Logout</button>
     </div>
   );

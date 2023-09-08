@@ -6,6 +6,7 @@ function AccByLocUpdateForm({ locationId }) {
   const [accessibilitiesID, setAccessibilitiesID] = useState([]);
   const [currentAccessibility, setCurrentAccessibility] = useState([]);
   const { token } = useAuthContext();
+  const [submitted, setSubmitted] = useState(false);
 
   async function fetchAccessibility() {
     const accessUrl = `${process.env.REACT_APP_API_HOST}/api/acessibility`;
@@ -65,11 +66,10 @@ function AccByLocUpdateForm({ locationId }) {
             Authorization: `Bearer ${token}`,
           },
         };
-        const response = await fetch(url, fetchConfig);
-        if (response.ok) {
-        }
+        await fetch(url, fetchConfig);
       }
     }
+    setSubmitted(true);
   }
 
   useEffect(() => {
@@ -84,28 +84,39 @@ function AccByLocUpdateForm({ locationId }) {
 
   return (
     <div>
-      <div className="form-floating mb-3">
-        <div>
-          {accessibilities.map((accessibility) => (
-            <div key={accessibility.id} className="form-check">
-              <input
-                type="checkbox"
-                id={accessibility.id}
-                name="accessibilities"
-                value={accessibility.id}
-                onChange={handleAccessbility}
-                className="form-check-input"
-              />
-              <label htmlFor={"accessibility"} className="form-check-label">
-                {accessibility.name}
-              </label>
-            </div>
-          ))}
+      {submitted ? (
+        <div
+          className="alert alert-success d-flex align-items-center bi flex-shrink-0 me-2"
+          role="alert"
+        >
+          <div>
+            <p>Thank you for updating the accessibilities!</p>
+          </div>
         </div>
-        <button onClick={handleSubmit} className="btn btn-primary">
-          Update
-        </button>
-      </div>
+      ) : (
+        <div className="form-floating mb-3">
+          <div>
+            {accessibilities.map((accessibility) => (
+              <div key={accessibility.id} className="form-check">
+                <input
+                  type="checkbox"
+                  id={accessibility.id}
+                  name="accessibilities"
+                  value={accessibility.id}
+                  onChange={handleAccessbility}
+                  className="form-check-input"
+                />
+                <label htmlFor={"accessibility"} className="form-check-label">
+                  {accessibility.name}
+                </label>
+              </div>
+            ))}
+          </div>
+          <button onClick={handleSubmit} className="btn btn-primary">
+            Update
+          </button>
+        </div>
+      )}
     </div>
   );
 }

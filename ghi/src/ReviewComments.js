@@ -93,10 +93,9 @@ function ReviewComments({ reviewIdInt }) {
   return (
     <>
       <div className="card text-bg-light mb-3">
-        <div className="card-body">
+        <div className="card-body ">
           <form onSubmit={(e) => handleCommentCreation(e)}>
             <div className="mb-3">
-              <label className="form-label">Content</label>
               <input
                 name="content"
                 type="text"
@@ -117,19 +116,21 @@ function ReviewComments({ reviewIdInt }) {
         </div>
       </div>
 
-      <div>
+      <div className="comment-list">
         {comments.map((comment) => {
           return (
-            <div key={comment.id}>
+            <div key={comment.id} className="commentbody">
+              <div className="comment-head">
+                <div>{comment.created_on}</div>
+              </div>
               <div>{comment.content}</div>
-              <div>{comment.created_on}</div>
-              <div>
+              <div className="icons-location">
                 {comment.account_id === userData?.account?.id && (
                   <button
-                    className="btn btn-danger"
+                    className="btn"
                     onClick={() => handleDeleteComment(comment.id)}
                   >
-                    Delete
+                    <i className="bi bi-trash3-fill  icon-size"></i>
                   </button>
                 )}
               </div>

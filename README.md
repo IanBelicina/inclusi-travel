@@ -24,6 +24,9 @@ After confirming you have the needed software to run the application, follow the
 - Open Docker desktop to confirm all containers are running.
 - Open the site on your browser at localhost:3000
 
+##SQL table Relationships
+![SQL Table Relationship](image.png)
+
 ## Comments
 
 The Comments model in this application provides a set of CRUD APIs, allowing users to seamlessly manage and interact with comments associated with various content. These APIs empower users to Create new comments, Read existing comments, Update comment information, and Delete comments as needed. Below is a table of how you can access these endpoints and examples of expected input and output json responses.
