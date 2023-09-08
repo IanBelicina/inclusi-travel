@@ -15,15 +15,19 @@ lint-test-job:
     - flake8 api
 
 # # Run the unit tests
-# api-unit-tests-job:
-#   image: python:3-bullseye
-#   stage: test
-#   needs:
-#     - lint-test-job
-#   script:
-#     - cd api
-#     - pip install -r requirements.txt
-#     - python -m pytest
+api-unit-tests-job:
+  image: python:3-bullseye
+  stage: test
+  needs:
+    - lint-test-job
+  script:
+    - cd api
+    - pip install -r requirements.txt
+    - python -m pytest
+  variables:
+    DATABASE_URL: postgresql://inclusitravel_user:password@may-9-pt-inclusitravel-service.default.svc.cluster.local/postgres
+    SIGNING_KEY: 27eefbec8dd4aa364539d78ebcbbc3b8ca56326709dad0549d715cf7474d681b
+    CORS_HOST: https://inclusitravel.gitlab.io
 
 # Build API Image:
 build-api-image:
