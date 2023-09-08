@@ -34,7 +34,7 @@ function Nav() {
             )}
             {!token && (
               <li className="nav-item">
-                <NavLink to="/Token" activeclassname="active-link">
+                <NavLink to="/login" activeclassname="active-link">
                   Login
                 </NavLink>
               </li>
@@ -49,11 +49,16 @@ function Nav() {
                 Locations Form
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/accessibility/form/" activeclassname="active-link">
-                Add an Accessibility
-              </NavLink>
-            </li>
+            {token && (
+              <li className="nav-item">
+                <NavLink
+                  to="/accessibility/form/"
+                  activeclassname="active-link"
+                >
+                  Add an Accessibility
+                </NavLink>
+              </li>
+            )}
             {token && (
               <li className="nav-item">
                 <LogoutButton />
