@@ -8,7 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* added background-image for testing */
 
-  background-image: url("/public/cool background2.jpg");
+  background-image: url("/public/coolbackground2.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
