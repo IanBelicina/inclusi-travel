@@ -159,3 +159,28 @@
   padding-bottom: 8px;
   border-color: #9e9e9e;
 }
+
+.carousel {
+  max-width: 75%;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.carousel-inner {
+  max-height: 100%;
+}
+
+.carousel-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.website-description {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 80%;
+  padding: 20px;
+  color: white;
+}

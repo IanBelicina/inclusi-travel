@@ -10,7 +10,11 @@ function Nav() {
     <nav className="navbar navbar-expand-lg navbar-dark">
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/">
-          <img src={require("./Logo_no_bg.png")} alt="" />
+          <img
+            src={require("./Logo_no_bg.png")}
+            alt=""
+            style={{ height: "60px" }}
+          />
         </NavLink>
         <button
           className="navbar-toggler"
