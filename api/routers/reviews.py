@@ -7,11 +7,9 @@ from psycopg import errors
 router = APIRouter()
 
 
-# Get all the reviews
 @router.get("/api/reviews", response_model=ReviewListOut)
 def get_reviews(
     queries: ReviewQueries = Depends(),
-    # dict=Depends(authenticator.get_current_account_data),
 ):
     reviews = queries.get_all_reviews()
     if not reviews:
@@ -20,7 +18,6 @@ def get_reviews(
     return {"reviews": reviews}
 
 
-# create a reveiw
 @router.post("/api/reviews", response_model=ReviewOut)
 def create_review(
     review: ReviewIn,
@@ -40,7 +37,6 @@ def create_review(
         )
 
 
-# Delete a review
 @router.delete("/api/reviews/{id}", response_model=bool)
 def delete_review(
     id: int,
@@ -55,12 +51,10 @@ def delete_review(
     return True
 
 
-# get revie
 @router.get("/api/reviews/{id}", response_model=ReviewOut)
 def get_review(
     id: int,
     queries: ReviewQueries = Depends(),
-    # dict = Depends(authenticator.get_current_account_data),
 ):
     record = queries.get_review(id)
     if record is None:
@@ -69,8 +63,6 @@ def get_review(
         )
     else:
         return record
-
-    # update review
 
 
 @router.put("/api/reviews/{id}", response_model=Optional[ReviewOut])
