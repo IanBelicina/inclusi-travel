@@ -12,13 +12,10 @@ class EmptyAccessibilityQueries:
 
 def test_get_all_accessibilities():
     app.dependency_overrides[AcessibilityQueries] = EmptyAccessibilityQueries
-    # ARRANGE
 
-    # ACT
     response = client.get("/api/acessibility")
 
     app.dependency_overrides = {}
 
-    # ASSERT
     assert response.status_code == 200
     assert response.json() == {"accessibilities": []}

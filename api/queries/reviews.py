@@ -63,11 +63,10 @@ class ReviewQueries:
                     location_id
                 )
                 accounts_list = AccountQueries().get_all_accounts()
-                # print(accounts_list)
+
                 account_username = None
                 for account in accounts_list:
                     if account.id == account_id:
-                        # print("account username", account.username)
                         account_username = account.username
 
                 account_instance = AccountQueries().get_account(
@@ -109,7 +108,7 @@ class ReviewQueries:
                         state=record["state"],
                         location_name=record["location_name"],
                         updated_on=record["updated_on"],
-                        picture=record["picture"] or "",  # if it's empty
+                        picture=record["picture"] or "",
                     )
 
                     account = AccountOut(
@@ -119,7 +118,6 @@ class ReviewQueries:
                         date_of_birth=record["date_of_birth"],
                         email=record["email"],
                         username=record["username"],
-                        # password=record['password']
                     )
 
                     record["location_id"] = location
@@ -169,7 +167,7 @@ class ReviewQueries:
                         state=record["state"],
                         location_name=record["location_name"],
                         updated_on=record["updated_on"],
-                        picture=record["picture"] or "",  # if it's empty
+                        picture=record["picture"] or "",
                     )
 
                     account = AccountOut(
@@ -179,7 +177,6 @@ class ReviewQueries:
                         date_of_birth=record["date_of_birth"],
                         email=record["email"],
                         username=record["username"],
-                        # password=record['password']
                     )
 
                     record["location_id"] = location
@@ -227,11 +224,10 @@ class ReviewQueries:
                     )
 
                     accounts_list = AccountQueries().get_all_accounts()
-                    # print(accounts_list)
+
                     account_username = None
                     for account in accounts_list:
                         if account.id == account_id:
-                            # print("account username", account.username)
                             account_username = account.username
 
                     account_instance = AccountQueries().get_account(
