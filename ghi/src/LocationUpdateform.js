@@ -217,9 +217,6 @@ function LocationUpdateForm({ locationId }) {
         </div>
       </div>
     </>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }
 export default LocationUpdateForm;

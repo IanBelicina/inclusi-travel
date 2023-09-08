@@ -96,7 +96,6 @@ class CommentRepository:
                     )
                     row = db.fetchone()
                     id = row[0]
-                    # print("id",id)
 
             return self.get_comment(id)
 
@@ -166,7 +165,6 @@ class CommentRepository:
     def get_all_review_comments(
         self, review_id: int
     ) -> Union[List[CommentOut], Error]:
-        # try:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 db.execute(
@@ -214,17 +212,6 @@ class CommentRepository:
                     comments.append(comment)
 
                 return comments
-
-                # if comments != []:
-                #     return comments
-                # else:
-                #     raise HTTPException(
-                #         status_code=404, detail="No comments found"
-                #     )
-
-    # except Exception as e:
-    #     print(e)
-    #     return Error(message="No review found for this id")
 
     def comment_record_to_dict(self, row, description) -> CommentOut:
         comment = None

@@ -145,7 +145,7 @@ function LocationDetails() {
     };
     const response = await fetch(url, fetchConfig);
     if (response.ok) {
-      fetchReviews(); // Refresh the reviews after deletion
+      fetchReviews(); 
     }
   }
 
