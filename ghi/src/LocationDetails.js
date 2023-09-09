@@ -200,14 +200,18 @@ function LocationDetails() {
                   </p>
                   <div className="icons-location">
                     <div>
+                      {userData && (
                       <button onClick={handleDelete} className="btn">
                         <i className="bi bi-trash3-fill  icon-size"></i>
                       </button>
+                      )}
                     </div>
                     <div>
+                      {userData && (
                       <button onClick={handleUpdate} className="btn">
                         <i className="bi bi-pencil-square icon-size"></i>
                       </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -235,11 +239,13 @@ function LocationDetails() {
                           </div>
                         ))}
                       </div>
-                      <div className="icons-location">
-                        <button onClick={handleUpdateAccess} className="btn">
-                          <i className="bi bi-pencil-square icon-size"></i>
-                        </button>
-                      </div>
+                      {userData && (
+                        <div className="icons-location">
+                          <button onClick={handleUpdateAccess} className="btn">
+                            <i className="bi bi-pencil-square icon-size"></i>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -249,15 +255,24 @@ function LocationDetails() {
         </div>
         <div className="location-card-right">
           <div>
-            <CreateReview locationId={locationId} fetchReviews={fetchReviews} />
+            {userData && (
+              <CreateReview
+                locationId={locationId}
+                fetchReviews={fetchReviews}
+              />
+            )}
           </div>
           {locationReviews.map((review) => (
             <div key={review.id} className="review-container">
               <div className="review-container-head">
                 <div>{stars[review.id]}</div>
+                <div className="review-username">
+                  {review.account_id.username}
+                </div>
                 <div>{review.created_on}</div>
               </div>
               <p>{review.body}</p>
+
               <div>
                 {review.replies ? (
                   <div>
@@ -279,7 +294,7 @@ function LocationDetails() {
                         )}
                       </div>
                     </div>
-                    <ReviewComments reviewIdInt={review.id} />
+                    {userData && <ReviewComments reviewIdInt={review.id} /> }
                   </div>
                 ) : (
                   <div className="review-container-bottom">
