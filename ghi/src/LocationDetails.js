@@ -294,10 +294,11 @@ function LocationDetails() {
                         )}
                       </div>
                     </div>
-                    {userData && <ReviewComments reviewIdInt={review.id} /> }
+                    <ReviewComments reviewIdInt={review.id} />
                   </div>
                 ) : (
                   <div className="review-container-bottom">
+                    
                     <button
                       className="btn"
                       onClick={() => handleReplies(review.id)}

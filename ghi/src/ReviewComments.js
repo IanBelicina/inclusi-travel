@@ -92,29 +92,31 @@ function ReviewComments({ reviewIdInt }) {
 
   return (
     <>
-      <div className="card text-bg-light mb-3">
-        <div className="card-body ">
-          <form onSubmit={(e) => handleCommentCreation(e)}>
-            <div className="mb-3">
-              <input
-                name="content"
-                type="text"
-                className="form-control"
-                onChange={(e) => {
-                  setContent(e.target.value);
-                }}
-              />
-            </div>
-            <div>
-              <input
-                className="btn btn-primary"
-                type="submit"
-                value="Create Comment"
-              />
-            </div>
-          </form>
+      {token && (
+        <div className="card text-bg-light mb-3">
+          <div className="card-body ">
+            <form onSubmit={(e) => handleCommentCreation(e)}>
+              <div className="mb-3">
+                <input
+                  name="content"
+                  type="text"
+                  className="form-control"
+                  onChange={(e) => {
+                    setContent(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <input
+                  className="btn btn-primary"
+                  type="submit"
+                  value="Create Comment"
+                />
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="comment-list">
         {comments.map((comment) => {
