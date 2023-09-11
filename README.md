@@ -218,13 +218,13 @@ Response Body:
 
 Below you will find all the endpoints and examples of expected input and output JSON responses for the reviews model. These endpoints allow CRUD operations for the reviews.
 
-| Action                    | Method | URL                                |
-| ------------------------- | ------ | ---------------------------------- |
-| Get all accounts          | GET    | http://localhost:8000/reviews      |
-| Get review                | GET    | http://localhost:8000/reviews/{id} |
-| Update review (protected) | PUT    | http://localhost:8000/reviews/{id} |
-| Delete review (protected) | DELETE | http://localhost:8000/reviews/{id} |
-| Create review (protected) | POST   | http://localhost:8000/reviews      |
+| Action                    | Method | URL                                    |
+| ------------------------- | ------ | -------------------------------------- |
+| Get all accounts          | GET    | http://localhost:8000/api/reviews      |
+| Get review                | GET    | http://localhost:8000/api/reviews/{id} |
+| Update review (protected) | PUT    | http://localhost:8000/api/reviews/{id} |
+| Delete review (protected) | DELETE | http://localhost:8000/api/reviews/{id} |
+| Create review (protected) | POST   | http://localhost:8000/api/reviews      |
 
 ### Get all reviews
 
@@ -382,11 +382,11 @@ Response Body:
 
 Below you will find all the endpoints and examples of expected input and output JSON responses for the accounts model. These endpoints allow CRUD operations for the accounts.
 
-| Action           | Method | URL                                       |
-| ---------------- | ------ | ----------------------------------------- |
-| Get all accounts | GET    | http://localhost:8000/accounts            |
-| Get account      | GET    | http://localhost:8000/accounts/{username} |
-| Create account   | POST   | http://localhost:8000/accounts            |
+| Action           | Method | URL                                           |
+| ---------------- | ------ | --------------------------------------------- |
+| Get all accounts | GET    | http://localhost:8000/api/accounts            |
+| Get account      | GET    | http://localhost:8000/api/accounts/{username} |
+| Create account   | POST   | http://localhost:8000/api/accounts            |
 
 ### Get all accounts
 
@@ -476,10 +476,10 @@ Response Body:
 
 Below you will find all the endpoints and examples of expected input and output JSON responses for the accessibility model. These endpoints allow CRUD operations for the accessibilities.
 
-| Action                           | Method | URL                                 |
-| -------------------------------- | ------ | ----------------------------------- |
-| Get all accessibilities          | GET    | http://localhost:8000/accessibility |
-| Create accessibility (protected) | POST   | http://localhost:8000/accessibility |
+| Action                           | Method | URL                                     |
+| -------------------------------- | ------ | --------------------------------------- |
+| Get all accessibilities          | GET    | http://localhost:8000/api/acessibility  |
+| Create accessibility (protected) | POST   | http://localhost:8000/api/acessibility  |
 
 ### Get accessibility
 
@@ -534,4 +534,167 @@ Response Body:
       "name": "Ramps"
     }
 
+```
+
+## Locations
+
+The location model supports CRUD operations for locations, and the location-accessibility model is able to be used to get a list of accessibilities per location id and create and delete an association between an individual location and an individual accessibility. There is also an endpoint to get the average rating for a location. Below you will find all the endpoints and examples of expected inputs and outputs of JSON responses for the locations model and location-accessibility model.
+
+| Action            | Method | URL                                          |
+| ----------------- | ------ | -------------------------------------------- |
+| Get all locations | GET    | http://localhost:8000/api/locations/          |
+| Get a location    | GET    | http://localhost:8000/api/locations/{location_id}  |
+| Create a location | POST   | http://localhost:8000/api/locations/          |
+| Change a location | PUT    | http://localhost:8000/api/locations/{location_id} |
+| Delete a location | DELETE | http://localhost:8000/api/locations/{location_id}/ |
+| Get average rating of a location | GET | http://localhost:8000/api/locations/{location_id}/average_rating |
+| Get list of accessibilities by location| GET   | http://localhost:8000/api/locations/{location_id}/accessibilities |
+| Create association between an accessibility and a location | POST | http://localhost:8000/api/locations/{location_id}/accessibilities/{accessibility_id}  |
+| Delete association between acccssibility and a location | DELETE | http://localhost:8000/api/locations/{location_id}/accessibilities/{accessibility_id} |
+
+
+### Get a list of locations
+
+Input: Blank
+
+Response Body:
+```
+{
+  "locations": [
+    {
+      "id": 0,
+      "address": "string",
+      "city": "string",
+      "state": "string",
+      "location_name": "string",
+      "picture": "string",
+      "updated_on": "2023-09-11"
+    }
+  ]
+}
+
+```
+
+### Create a location (protected end point)
+
+Input:
+```
+{
+  "address": "string",
+  "city": "string",
+  "state": "string",
+  "location_name": "string",
+  "picture": "string",
+  "updated_on": "2023-09-11"
+}
+```
+
+Response Body:
+```
+{
+  "id": 0,
+  "address": "string",
+  "city": "string",
+  "state": "string",
+  "location_name": "string",
+  "picture": "string",
+  "updated_on": "2023-09-11"
+}
+```
+
+### Delete a location (protected end point)
+
+Input: location id
+
+Response Body:
+```
+true
+```
+
+### Get a location
+
+Input: location id
+
+Response Body:
+```
+{
+  "id": 0,
+  "address": "string",
+  "city": "string",
+  "state": "string",
+  "location_name": "string",
+  "picture": "string",
+  "updated_on": "2023-09-11"
+}
+```
+
+### Updte a location (protected endpoint)
+
+Input: location id
+```
+{
+  "address": "string1",
+  "city": "string1",
+  "state": "string1",
+  "location_name": "string1",
+  "picture": "string1",
+  "updated_on": "2023-09-11"
+}
+```
+
+Response Body:
+```
+{
+  "id": 0,
+  "address": "string1",
+  "city": "string1",
+  "state": "string1",
+  "location_name": "string1",
+  "picture": "string1",
+  "updated_on": "2023-09-11"
+}
+```
+
+### Get list of accessibilities by location
+
+Input: location id
+
+Response Body:
+```
+{
+  "accessibilities": [
+    {
+      "id": 0,
+      "name": "string"
+    }
+  ]
+}
+```
+
+### Create assocciation between an accessibility and a location (protected endpoint)
+
+Input: location id and accessibility id
+
+Response Body:
+```
+true
+```
+
+### Delete assocciation between an accessibility and a location (protected endpoint)
+
+Input: location id and accessibility id
+
+Response Body:
+```
+true
+```
+
+
+### Get average rating of a location
+
+Input: location id
+
+Response Body:
+```
+0
 ```
