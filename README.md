@@ -24,7 +24,7 @@ After confirming you have the needed software to run the application, follow the
 - Open Docker desktop to confirm all containers are running.
 - Open the site on your browser at localhost:3000
 
-##SQL table Relationships
+## SQL table Relationships
 ![SQL Table Relationship](image.png)
 
 ## Comments
